@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instinctive Technologies — IT Solutions & Infrastructure | Instinctive, INC.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --bg: #080808; --surface: #111111; --surface-2: #1a1a1a; --surface-3: #0e0e0e; --border: #222222; --border-hover: #333333; --text: #f0f0f0; --text-muted: #888888; --text-dim: #555555; --accent: #c8ff00; --accent-dim: rgba(200, 255, 0, 0.08); --accent-glow: rgba(200, 255, 0, 0.15); --white: #ffffff; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--accent); color: var(--bg); }
+::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.cursor-glow { position: fixed; width: 600px; height: 600px; border-radius: 50%; pointer-events: none; z-index: 0; background: radial-gradient(circle, rgba(200, 255, 0, 0.03) 0%, transparent 70%); transform: translate(-50%, -50%); transition: transform 0.1s ease-out; }
+.noise { position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 0 3rem; height: 72px; display: flex; align-items: center; justify-content: space-between; background: rgba(8, 8, 8, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid transparent; transition: border-color 0.3s ease; }
+nav.scrolled { border-bottom-color: var(--border); }
+.nav-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.15rem; letter-spacing: -0.03em; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 0.6rem; }
+.nav-logo .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: pulse-dot 2s ease-in-out infinite; }
+@keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+.nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
+.nav-links a { font-size: 0.82rem; font-weight: 500; color: var(--text-muted); text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.25s ease; }
+.nav-links a:hover { color: var(--white); }
+.nav-cta { padding: 0.55rem 1.4rem; background: var(--white); color: var(--bg) !important; border-radius: 100px; font-weight: 600 !important; transition: background 0.25s ease, transform 0.2s ease !important; }
+.nav-cta:hover { background: var(--accent) !important; transform: scale(1.03); }
+.menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+.menu-toggle span { width: 24px; height: 2px; background: var(--white); transition: 0.3s ease; }
+.back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; font-weight: 500; color: var(--text-dim); text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2rem; transition: color 0.3s ease; opacity: 0; animation: fadeUp 0.6s ease forwards 0.1s; }
+.back-link:hover { color: var(--accent); }
+.back-link svg { width: 16px; height: 16px; stroke: currentColor; }
+
+.division-hero { min-height: 85vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 3rem 5rem; position: relative; overflow: hidden; }
+.division-hero-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(200, 255, 0, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(200, 255, 0, 0.02) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 70% 60% at 70% 40%, black 10%, transparent 80%); }
+.division-hero-gradient { position: absolute; top: 0; right: 0; width: 50%; height: 100%; background: radial-gradient(ellipse at 80% 30%, rgba(200, 255, 0, 0.04), transparent 70%); pointer-events: none; }
+
+/* Server rack decoration */
+.hero-rack-deco { position: absolute; right: 6%; top: 15%; opacity: 0.06; pointer-events: none; }
+.hero-rack { width: 140px; border: 1.5px solid var(--white); border-radius: 4px; padding: 8px; }
+.hero-rack-unit { height: 18px; border: 1px solid var(--white); border-radius: 2px; margin-bottom: 4px; display: flex; align-items: center; padding: 0 6px; gap: 3px; }
+.hero-rack-led { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
+.hero-rack-vent { flex: 1; height: 2px; background: var(--white); opacity: 0.3; margin-left: 6px; }
+
+.hero-content { position: relative; z-index: 2; max-width: 800px; }
+.division-badge { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.45rem 1rem 0.45rem 0.55rem; background: var(--accent-dim); border: 1px solid rgba(200, 255, 0, 0.12); border-radius: 100px; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.6s ease forwards 0.2s; }
+.division-badge-icon { width: 28px; height: 28px; border-radius: 50%; background: rgba(200, 255, 0, 0.12); display: flex; align-items: center; justify-content: center; }
+.division-badge-icon svg { width: 14px; height: 14px; stroke: var(--accent); }
+.division-badge-text { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+.division-hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.8rem, 6.5vw, 5.5rem); font-weight: 700; line-height: 0.95; letter-spacing: -0.04em; color: var(--white); opacity: 0; animation: fadeUp 0.8s ease forwards 0.35s; }
+.division-hero h1 .accent-text { color: var(--accent); }
+.division-hero-desc { font-size: 1.15rem; font-weight: 400; color: var(--text-muted); max-width: 550px; line-height: 1.7; margin-top: 1.8rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.5s; }
+.hero-meta { display: flex; gap: 3rem; margin-top: 3rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.65s; }
+.hero-meta-item { display: flex; flex-direction: column; gap: 0.2rem; }
+.hero-meta-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; }
+.hero-meta-value { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--white); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+section { padding: 7rem 3rem; position: relative; }
+.section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem; }
+.section-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; letter-spacing: -0.03em; color: var(--white); max-width: 700px; line-height: 1.1; }
+.section-desc { color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; max-width: 560px; margin-top: 1.2rem; }
+.section-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 3rem; margin-bottom: 4rem; }
+.section-header-right { font-size: 0.88rem; color: var(--text-muted); max-width: 380px; line-height: 1.65; text-align: right; }
+
+.philosophy-strip { padding: 4rem 3rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 4rem; }
+.philosophy-quote { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 600; color: var(--white); line-height: 1.35; letter-spacing: -0.02em; flex: 1; }
+.philosophy-quote span { color: var(--accent); }
+.philosophy-attr { font-size: 0.78rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; min-width: 160px; text-align: right; }
+
+/* ─── UPTIME STRIP ─── */
+.uptime-section { padding: 5rem 3rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface-3); }
+.uptime-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-top: 3rem; }
+.uptime-cell { background: var(--surface); padding: 2.5rem 1.5rem; text-align: center; transition: background 0.3s ease; }
+.uptime-cell:hover { background: var(--surface-2); }
+.uptime-value { font-family: 'Space Grotesk', sans-serif; font-size: 2.2rem; font-weight: 700; color: var(--accent); letter-spacing: -0.03em; line-height: 1; margin-bottom: 0.4rem; }
+.uptime-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+.uptime-bar { width: 100%; height: 4px; background: var(--border); border-radius: 2px; margin-top: 1rem; overflow: hidden; }
+.uptime-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 1.5s ease; }
+
+/* ─── CAPABILITIES ─── */
+#capabilities { background: var(--bg); }
+.capabilities-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.capability-card { background: var(--surface); padding: 2.5rem; position: relative; transition: background 0.4s ease; cursor: default; }
+.capability-card:hover { background: var(--surface-2); }
+.capability-card::after { content: ''; position: absolute; bottom: 0; left: 2.5rem; right: 2.5rem; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity 0.4s ease; }
+.capability-card:hover::after { opacity: 0.3; }
+.capability-number { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 1.2rem; opacity: 0.5; }
+.capability-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 600; color: var(--white); margin-bottom: 0.8rem; }
+.capability-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.65; }
+.capability-list { list-style: none; margin-top: 1.2rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.capability-list li { font-size: 0.78rem; color: var(--text-dim); display: flex; align-items: center; gap: 0.5rem; transition: color 0.3s ease; }
+.capability-card:hover .capability-list li { color: var(--text-muted); }
+.capability-list li::before { content: ''; width: 4px; height: 4px; background: var(--accent); border-radius: 50%; opacity: 0.4; flex-shrink: 0; }
+
+/* ─── WORK ─── */
+#work { background: var(--surface-3); border-top: 1px solid var(--border); }
+.work-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+.work-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); cursor: default; }
+.work-card:hover { border-color: var(--border-hover); transform: translateY(-4px); }
+.work-card-featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; }
+.work-card-featured .work-visual { min-height: 400px; }
+.work-visual { background: var(--surface-2); min-height: 260px; position: relative; overflow: hidden; }
+.work-visual-inner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.visual-pattern { width: 100%; height: 100%; position: relative; overflow: hidden; }
+
+.vp-server { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; }
+.vp-server-unit { height: 22px; border: 1px solid rgba(200, 255, 0, 0.08); border-radius: 3px; margin-bottom: 3px; display: flex; align-items: center; padding: 0 8px; gap: 4px; background: rgba(200, 255, 0, 0.01); }
+.vp-server-led { width: 4px; height: 4px; border-radius: 50%; background: rgba(200, 255, 0, 0.15); }
+.vp-server-slot { flex: 1; height: 3px; background: rgba(200, 255, 0, 0.04); border-radius: 1px; }
+
+.vp-lock { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.vp-lock-body { width: 60px; height: 50px; border: 1px solid rgba(200, 255, 0, 0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+.vp-lock-shackle { width: 30px; height: 25px; border: 1px solid rgba(200, 255, 0, 0.08); border-bottom: none; border-radius: 15px 15px 0 0; position: absolute; top: -25px; left: 50%; transform: translateX(-50%); }
+.vp-lock-hole { width: 8px; height: 8px; border-radius: 50%; border: 1px solid rgba(200, 255, 0, 0.12); }
+
+.vp-cloud { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); }
+.vp-cloud-body { width: 120px; height: 60px; border: 1px solid rgba(200, 255, 0, 0.08); border-radius: 30px; position: relative; }
+.vp-cloud-bump { width: 50px; height: 40px; border: 1px solid rgba(200, 255, 0, 0.06); border-radius: 25px; position: absolute; border-bottom: none; }
+.vp-cloud-line { position: absolute; bottom: -30px; left: 50%; width: 1px; height: 25px; background: rgba(200, 255, 0, 0.06); }
+.vp-cloud-node { position: absolute; bottom: -38px; width: 8px; height: 8px; border: 1px solid rgba(200, 255, 0, 0.08); border-radius: 50%; }
+
+.work-info { padding: 2rem 2.5rem; }
+.work-category { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.6rem; opacity: 0.7; }
+.work-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 700; color: var(--white); letter-spacing: -0.02em; margin-bottom: 0.6rem; }
+.work-client { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem; }
+.work-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 1.5rem; }
+.work-results { display: flex; gap: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
+.work-result { display: flex; flex-direction: column; gap: 0.15rem; }
+.work-result-value { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
+.work-result-label { font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+
+#clients { border-top: 1px solid var(--border); }
+.clients-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end; margin-bottom: 4rem; }
+.clients-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.client-cell { background: var(--surface); padding: 2.5rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 0.8rem; min-height: 140px; transition: background 0.3s ease; }
+.client-cell:hover { background: var(--surface-2); }
+.client-logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text-dim); letter-spacing: -0.02em; transition: color 0.3s ease; }
+.client-cell:hover .client-logo { color: var(--white); }
+.client-type { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.6; }
+
+#services { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.services-list { margin-top: 4rem; }
+.service-row { display: grid; grid-template-columns: 2fr 3fr 1fr; gap: 2rem; align-items: center; padding: 1.8rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.4s ease; cursor: default; }
+.service-row:first-child { border-top: 1px solid var(--border); }
+.service-row:hover { padding-left: 1rem; }
+.service-row h4 { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 600; color: var(--white); transition: color 0.3s ease; }
+.service-row:hover h4 { color: var(--accent); }
+.service-row p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+.service-arrow { display: flex; justify-content: flex-end; color: var(--text-dim); transition: color 0.3s ease, transform 0.3s ease; }
+.service-row:hover .service-arrow { color: var(--accent); transform: translateX(4px); }
+.svc-arrow-svg { width: 20px; height: 20px; }
+
+.btn-primary { padding: 0.85rem 2.2rem; background: var(--accent); color: var(--bg); font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.04em; text-transform: uppercase; border: none; border-radius: 100px; cursor: pointer; text-decoration: none; transition: transform 0.2s ease, box-shadow 0.3s ease; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200, 255, 0, 0.25); }
+.btn-secondary { padding: 0.85rem 2.2rem; background: transparent; color: var(--text); font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.04em; text-transform: uppercase; border: 1px solid var(--border); border-radius: 100px; cursor: pointer; text-decoration: none; transition: border-color 0.3s ease, background 0.3s ease; }
+.btn-secondary:hover { border-color: var(--text-muted); background: rgba(255,255,255,0.03); }
+.cta-section { padding: 8rem 3rem; text-align: center; position: relative; overflow: hidden; }
+.cta-glow { position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(200, 255, 0, 0.06), transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.cta-section .section-title { max-width: 550px; margin: 0 auto; text-align: center; }
+.cta-section .section-desc { max-width: 440px; margin: 1.2rem auto 0; text-align: center; }
+.cta-actions { display: flex; justify-content: center; gap: 1rem; margin-top: 2.5rem; position: relative; z-index: 1; }
+
+footer { padding: 3rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.footer-left { font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+.footer-left span { color: var(--text-dim); font-weight: 400; font-size: 0.78rem; }
+.footer-right { display: flex; gap: 2rem; }
+.footer-right a { font-size: 0.78rem; color: var(--text-dim); text-decoration: none; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; transition: color 0.3s ease; }
+.footer-right a:hover { color: var(--accent); }
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 1024px) { .capabilities-grid { grid-template-columns: repeat(2, 1fr); } .work-card-featured { grid-template-columns: 1fr; } .clients-grid { grid-template-columns: repeat(3, 1fr); } .clients-intro { grid-template-columns: 1fr; gap: 1.5rem; } .uptime-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px) { nav { padding: 0 1.5rem; } .nav-links { display: none; } .menu-toggle { display: flex; } .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0; background: rgba(8, 8, 8, 0.97); backdrop-filter: blur(20px); padding: 2rem 1.5rem; gap: 1.5rem; border-bottom: 1px solid var(--border); } section { padding: 4rem 1.5rem; } .division-hero { padding: 7rem 1.5rem 3rem; min-height: auto; } .capabilities-grid, .work-grid { grid-template-columns: 1fr; } .work-card-featured { grid-template-columns: 1fr; } .clients-grid { grid-template-columns: repeat(2, 1fr); } .service-row { grid-template-columns: 1fr; gap: 0.5rem; } .service-arrow { display: none; } .hero-meta { flex-wrap: wrap; gap: 1.5rem; } .philosophy-strip { flex-direction: column; gap: 1.5rem; padding: 3rem 1.5rem; } .philosophy-attr { text-align: left; } .cta-actions { flex-direction: column; align-items: center; } footer { flex-direction: column; gap: 1.5rem; text-align: center; } .footer-right { flex-wrap: wrap; justify-content: center; } .work-results { flex-wrap: wrap; gap: 1.2rem; } .section-header { flex-direction: column; align-items: flex-start; gap: 1rem; } .section-header-right { text-align: left; } .uptime-grid { grid-template-columns: repeat(2, 1fr); } .hero-rack-deco { display: none; } }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<nav id="nav">
+  <a href="/" class="nav-logo"><span class="dot"></span> INSTINCTIVE</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/#divisions">Divisions</a></li>
+    <li><a href="#capabilities">Capabilities</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#clients">Clients</a></li>
+    <li><a href="#contact" class="nav-cta">Get an Assessment</a></li>
+  </ul>
+  <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+</nav>
+
+<section class="division-hero">
+  <div class="division-hero-bg"></div>
+  <div class="division-hero-gradient"></div>
+  <div class="hero-rack-deco">
+    <div class="hero-rack">
+      <div class="hero-rack-unit"><div class="hero-rack-led"></div><div class="hero-rack-led"></div><div class="hero-rack-vent"></div></div>
+      <div class="hero-rack-unit"><div class="hero-rack-led"></div><div class="hero-rack-led"></div><div class="hero-rack-vent"></div></div>
+      <div class="hero-rack-unit"><div class="hero-rack-led"></div><div class="hero-rack-led"></div><div class="hero-rack-vent"></div></div>
+      <div class="hero-rack-unit"><div class="hero-rack-led"></div><div class="hero-rack-led"></div><div class="hero-rack-vent"></div></div>
+      <div class="hero-rack-unit"><div class="hero-rack-led"></div><div class="hero-rack-led"></div><div class="hero-rack-vent"></div></div>
+      <div class="hero-rack-unit"><div class="hero-rack-led"></div><div class="hero-rack-led"></div><div class="hero-rack-vent"></div></div>
+      <div class="hero-rack-unit"><div class="hero-rack-led"></div><div class="hero-rack-led"></div><div class="hero-rack-vent"></div></div>
+      <div class="hero-rack-unit"><div class="hero-rack-led"></div><div class="hero-rack-led"></div><div class="hero-rack-vent"></div></div>
+    </div>
+  </div>
+  <div class="hero-content">
+    <a href="/" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> All Divisions</a>
+    <div class="division-badge">
+      <div class="division-badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div>
+      <span class="division-badge-text">IT Solutions &amp; Infrastructure</span>
+    </div>
+    <h1>Instinctive<br><span class="accent-text">Technologies</span></h1>
+    <p class="division-hero-desc">Enterprise IT infrastructure, managed services, and cybersecurity — built for uptime, built for scale, and built to protect. We keep your technology running so you can focus on running your business.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><span class="hero-meta-label">Focus</span><span class="hero-meta-value">Infrastructure & Security</span></div>
+      <div class="hero-meta-item"><span class="hero-meta-label">Approach</span><span class="hero-meta-value">Proactive, Not Reactive</span></div>
+      <div class="hero-meta-item"><span class="hero-meta-label">Scope</span><span class="hero-meta-value">SMB to Enterprise</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="philosophy-strip reveal">
+  <div class="philosophy-quote">"The best IT is <span>invisible</span>. You shouldn't know we're here until you realize nothing's <span>gone wrong in months</span>."</div>
+  <div class="philosophy-attr">Instinctive Technologies<br>Operations Philosophy</div>
+</div>
+
+<div class="uptime-section">
+  <div class="reveal">
+    <div class="section-label">System Status</div>
+    <h2 class="section-title">Infrastructure you can rely on.</h2>
+  </div>
+  <div class="uptime-grid reveal">
+    <div class="uptime-cell">
+      <div class="uptime-value">99.99%</div>
+      <div class="uptime-label">Uptime SLA</div>
+      <div class="uptime-bar"><div class="uptime-bar-fill" style="width: 99.99%;"></div></div>
+    </div>
+    <div class="uptime-cell">
+      <div class="uptime-value">&lt;15min</div>
+      <div class="uptime-label">Avg. Response Time</div>
+      <div class="uptime-bar"><div class="uptime-bar-fill" style="width: 92%;"></div></div>
+    </div>
+    <div class="uptime-cell">
+      <div class="uptime-value">24/7</div>
+      <div class="uptime-label">Monitoring & Support</div>
+      <div class="uptime-bar"><div class="uptime-bar-fill" style="width: 100%;"></div></div>
+    </div>
+    <div class="uptime-cell">
+      <div class="uptime-value">0</div>
+      <div class="uptime-label">Breaches (5yr Record)</div>
+      <div class="uptime-bar"><div class="uptime-bar-fill" style="width: 100%;"></div></div>
+    </div>
+  </div>
+</div>
+
+<section id="capabilities">
+  <div class="section-header reveal">
+    <div><div class="section-label">01 — Capabilities</div><h2 class="section-title">Full-stack IT, fully managed.</h2></div>
+    <div class="section-header-right">From your network closet to your cloud infrastructure — we architect, deploy, monitor, and secure it all.</div>
+  </div>
+  <div class="capabilities-grid reveal">
+    <div class="capability-card"><div class="capability-number">001</div><h3>Managed IT Services</h3><p>Proactive IT management — monitoring, maintenance, helpdesk, and strategic planning so your technology never becomes a bottleneck.</p><ul class="capability-list"><li>24/7 Monitoring & Alerting</li><li>Helpdesk & Tier 1-3 Support</li><li>Patch Management & Updates</li><li>Asset & License Management</li><li>IT Strategy & Roadmap</li></ul></div>
+    <div class="capability-card"><div class="capability-number">002</div><h3>Cloud Infrastructure</h3><p>Cloud architecture, migration, and optimization — AWS, Azure, and GCP environments designed for performance, cost-efficiency, and reliability.</p><ul class="capability-list"><li>Cloud Architecture & Design</li><li>Migration & Modernization</li><li>Multi-Cloud & Hybrid Strategies</li><li>Cost Optimization</li><li>Disaster Recovery & Backup</li></ul></div>
+    <div class="capability-card"><div class="capability-number">003</div><h3>Cybersecurity</h3><p>Defense-in-depth security — from endpoint protection and network security to compliance frameworks and incident response.</p><ul class="capability-list"><li>Threat Detection & Response</li><li>Penetration Testing</li><li>Security Audits & Compliance</li><li>Identity & Access Management</li><li>Security Awareness Training</li></ul></div>
+    <div class="capability-card"><div class="capability-number">004</div><h3>Network & Infrastructure</h3><p>On-premise and hybrid network design — switches, firewalls, wireless, and connectivity engineered for speed and reliability.</p><ul class="capability-list"><li>Network Design & Implementation</li><li>Firewall & VPN Management</li><li>Wireless (Wi-Fi 6E / 7)</li><li>SD-WAN & SASE</li><li>Structured Cabling & Rack Builds</li></ul></div>
+    <div class="capability-card"><div class="capability-number">005</div><h3>Unified Communications</h3><p>Modern communication platforms — VoIP, video conferencing, messaging, and collaboration tools that keep your team connected.</p><ul class="capability-list"><li>VoIP & Phone Systems</li><li>Microsoft 365 / Google Workspace</li><li>Video Conferencing (Zoom, Teams)</li><li>Collaboration Platform Setup</li><li>Contact Center Solutions</li></ul></div>
+    <div class="capability-card"><div class="capability-number">006</div><h3>Compliance & Governance</h3><p>Regulatory compliance and data governance — frameworks, policies, and tooling to meet industry and legal requirements.</p><ul class="capability-list"><li>SOC 2 / ISO 27001 Preparation</li><li>HIPAA / PCI-DSS Compliance</li><li>Data Governance Frameworks</li><li>Business Continuity Planning</li><li>Vendor Risk Management</li></ul></div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="section-header reveal">
+    <div><div class="section-label">02 — Selected Work</div><h2 class="section-title">Infrastructure that doesn't make headlines.</h2></div>
+    <div class="section-header-right">The best compliment in IT: when no one notices because everything just works.</div>
+  </div>
+  <div class="work-grid reveal">
+    <div class="work-card work-card-featured">
+      <div class="work-visual"><div class="work-visual-inner"><div class="visual-pattern" style="background: linear-gradient(135deg, var(--surface-2), var(--surface));"><div class="vp-cloud"><div class="vp-cloud-body"><div class="vp-cloud-bump" style="top: -20px; left: 20px;"></div><div class="vp-cloud-bump" style="top: -25px; left: 50px;"></div></div><div class="vp-cloud-line" style="left: 30%;"></div><div class="vp-cloud-line" style="left: 50%;"></div><div class="vp-cloud-line" style="left: 70%;"></div><div class="vp-cloud-node" style="left: calc(30% - 4px);"></div><div class="vp-cloud-node" style="left: calc(50% - 4px);"></div><div class="vp-cloud-node" style="left: calc(70% - 4px);"></div></div></div></div></div>
+      <div class="work-info" style="display:flex;flex-direction:column;justify-content:center;">
+        <div class="work-category">Cloud Migration</div>
+        <div class="work-title">Full Cloud Migration — Multi-Office Enterprise</div>
+        <div class="work-client">Confidential — Financial Services (350+ Employees)</div>
+        <div class="work-desc">Migrated a 350-person, 4-office enterprise from legacy on-prem infrastructure to a hybrid cloud environment (Azure + AWS). Zero unplanned downtime during the 6-month migration. Annual IT costs reduced by 34%.</div>
+        <div class="work-results"><div class="work-result"><span class="work-result-value">-34%</span><span class="work-result-label">IT Cost Reduction</span></div><div class="work-result"><span class="work-result-value">0 hrs</span><span class="work-result-label">Unplanned Downtime</span></div><div class="work-result"><span class="work-result-value">4</span><span class="work-result-label">Offices Migrated</span></div></div>
+      </div>
+    </div>
+    <div class="work-card">
+      <div class="work-visual"><div class="work-visual-inner"><div class="visual-pattern" style="background: var(--surface-2);"><div class="vp-lock"><div class="vp-lock-shackle"></div><div class="vp-lock-body"><div class="vp-lock-hole"></div></div></div></div></div></div>
+      <div class="work-info"><div class="work-category">Cybersecurity</div><div class="work-title">Security Overhaul — Healthcare Provider</div><div class="work-client">Confidential — Regional Healthcare Network</div><div class="work-desc">End-to-end security overhaul — vulnerability assessment, endpoint deployment, SIEM implementation, HIPAA compliance documentation, and staff security training across 12 locations.</div><div class="work-results"><div class="work-result"><span class="work-result-value">HIPAA</span><span class="work-result-label">Full Compliance</span></div><div class="work-result"><span class="work-result-value">12</span><span class="work-result-label">Locations Secured</span></div></div></div>
+    </div>
+    <div class="work-card">
+      <div class="work-visual"><div class="work-visual-inner"><div class="visual-pattern" style="background: linear-gradient(180deg, var(--surface-2), var(--surface));"><div class="vp-server"><div class="vp-server-unit"><div class="vp-server-led"></div><div class="vp-server-slot"></div></div><div class="vp-server-unit"><div class="vp-server-led"></div><div class="vp-server-slot"></div></div><div class="vp-server-unit"><div class="vp-server-led"></div><div class="vp-server-slot"></div></div><div class="vp-server-unit"><div class="vp-server-led"></div><div class="vp-server-slot"></div></div><div class="vp-server-unit"><div class="vp-server-led"></div><div class="vp-server-slot"></div></div></div></div></div></div>
+      <div class="work-info"><div class="work-category">Managed Services</div><div class="work-title">Full Managed IT — Growing Startup</div><div class="work-client">Confidential — SaaS Startup (40→180 Employees)</div><div class="work-desc">Full IT outsource for a rapidly scaling startup — helpdesk, device management, onboarding/offboarding automation, and infrastructure that scaled from 40 to 180 employees in 18 months without a single day of IT bottleneck.</div><div class="work-results"><div class="work-result"><span class="work-result-value">40→180</span><span class="work-result-label">Headcount Scaled</span></div><div class="work-result"><span class="work-result-value">&lt;4 min</span><span class="work-result-label">Avg. Ticket Response</span></div></div></div>
+    </div>
+    <div class="work-card">
+      <div class="work-visual"><div class="work-visual-inner"><div class="visual-pattern" style="background: var(--surface-2);"><div class="vp-server" style="width: 100px;"><div class="vp-server-unit"><div class="vp-server-led"></div><div class="vp-server-slot"></div></div><div class="vp-server-unit"><div class="vp-server-led"></div><div class="vp-server-slot"></div></div><div class="vp-server-unit"><div class="vp-server-led"></div><div class="vp-server-slot"></div></div></div></div></div></div>
+      <div class="work-info"><div class="work-category">Network Infrastructure</div><div class="work-title">Office Buildout — Multi-Floor Network</div><div class="work-client">Confidential — Creative Agency (New HQ)</div><div class="work-desc">Complete network infrastructure for a 3-floor, 25,000 sq ft new headquarters — structured cabling, Wi-Fi 6E, firewall/VPN, AV integration, server room build, and ISP failover. Move-in ready on day one.</div><div class="work-results"><div class="work-result"><span class="work-result-value">3</span><span class="work-result-label">Floors Networked</span></div><div class="work-result"><span class="work-result-value">Day 1</span><span class="work-result-label">Operational on Move-In</span></div></div></div>
+    </div>
+    <div class="work-card">
+      <div class="work-visual"><div class="work-visual-inner"><div class="visual-pattern" style="background: linear-gradient(225deg, var(--surface-2), rgba(200,255,0,0.02));"><div class="vp-lock"><div class="vp-lock-shackle"></div><div class="vp-lock-body"><div class="vp-lock-hole"></div></div></div></div></div></div>
+      <div class="work-info"><div class="work-category">Compliance</div><div class="work-title">SOC 2 Type II — Preparation & Certification</div><div class="work-client">Confidential — B2B SaaS Platform</div><div class="work-desc">Guided a SaaS company through SOC 2 Type II preparation — policy creation, control implementation, tooling deployment, and auditor coordination. Achieved certification on the first attempt.</div><div class="work-results"><div class="work-result"><span class="work-result-value">SOC 2</span><span class="work-result-label">Type II Achieved</span></div><div class="work-result"><span class="work-result-value">1st</span><span class="work-result-label">Attempt Certification</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="clients">
+  <div class="clients-intro reveal"><div><div class="section-label">03 — Clients & Partners</div><h2 class="section-title">Trusted behind the firewall.</h2></div><p class="section-desc" style="margin-top:0;">From startups that need an IT team to enterprises that need a better one.</p></div>
+  <div class="clients-grid reveal">
+    <div class="client-cell"><div class="client-logo">NovaTech</div><div class="client-type">Enterprise SaaS</div></div>
+    <div class="client-cell"><div class="client-logo">Ironclad</div><div class="client-type">Cybersecurity</div></div>
+    <div class="client-cell"><div class="client-logo">Meridian Health</div><div class="client-type">Healthcare</div></div>
+    <div class="client-cell"><div class="client-logo">Vantage Fintech</div><div class="client-type">Financial Services</div></div>
+    <div class="client-cell"><div class="client-logo">Clearpath</div><div class="client-type">Logistics</div></div>
+    <div class="client-cell"><div class="client-logo">Terraform Labs</div><div class="client-type">Deep Tech</div></div>
+    <div class="client-cell"><div class="client-logo">Vertex Capital</div><div class="client-type">Venture Capital</div></div>
+    <div class="client-cell"><div class="client-logo">Arclight</div><div class="client-type">Entertainment</div></div>
+    <div class="client-cell"><div class="client-logo">Solstice Media</div><div class="client-type">Media</div></div>
+    <div class="client-cell"><div class="client-logo">Onda</div><div class="client-type">CPG / DTC</div></div>
+    <div class="client-cell"><div class="client-logo">Kinetic Sports</div><div class="client-type">Sports & Fitness</div></div>
+    <div class="client-cell"><div class="client-logo">Halcyon Foundation</div><div class="client-type">Nonprofit</div></div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="reveal"><div class="section-label">04 — Full Service Menu</div><h2 class="section-title">Every layer, every endpoint.</h2><p class="section-desc">Available as managed services, project-based engagements, or co-managed IT partnerships.</p></div>
+  <div class="services-list reveal">
+    <div class="service-row"><h4>Managed IT Services</h4><p>24/7 monitoring, helpdesk, patch management, vendor coordination, strategic planning, and IT leadership (vCIO).</p><div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div>
+    <div class="service-row"><h4>Cloud Architecture & Migration</h4><p>Cloud design, migration planning, hybrid/multi-cloud implementation, optimization, and ongoing management.</p><div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div>
+    <div class="service-row"><h4>Cybersecurity & Threat Management</h4><p>Vulnerability assessment, SIEM/SOC, endpoint protection, pen testing, incident response, and security training.</p><div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div>
+    <div class="service-row"><h4>Network Design & Implementation</h4><p>Structured cabling, switching, routing, wireless, firewall, VPN, SD-WAN, and ISP management.</p><div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div>
+    <div class="service-row"><h4>Backup & Disaster Recovery</h4><p>Backup architecture, replication, failover testing, recovery planning, and business continuity documentation.</p><div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div>
+    <div class="service-row"><h4>Unified Communications</h4><p>VoIP, Microsoft 365, Google Workspace, video conferencing, collaboration tools, and contact center platforms.</p><div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div>
+    <div class="service-row"><h4>Compliance & Governance</h4><p>SOC 2, HIPAA, PCI-DSS, ISO 27001 preparation, policy frameworks, and audit coordination.</p><div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div>
+    <div class="service-row"><h4>Procurement & Vendor Management</h4><p>Hardware/software procurement, vendor evaluation, license optimization, and technology budgeting.</p><div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div>
+  </div>
+</section>
+
+<section class="cta-section" id="contact">
+  <div class="cta-glow"></div>
+  <div class="reveal">
+    <div class="section-label" style="text-align:center;">Let's Secure</div>
+    <h2 class="section-title">Ready for IT that actually works?</h2>
+    <p class="section-desc">Whether you need a full managed IT partner or a targeted infrastructure project — we'll start with an assessment and build from there.</p>
+    <div class="cta-actions"><a href="mailto:tech@instinctive.xyz" class="btn-primary">Get an Assessment</a><a href="/" class="btn-secondary">All Divisions</a></div>
+  </div>
+</section>
+
+<footer><div class="footer-left">Instinctive, INC. <span>&nbsp;© 2025. All rights reserved.</span></div><div class="footer-right"><a href="https://instinctive.xyz" target="_blank">instinctive.xyz</a><a href="/">Home</a><a href="/#divisions">Divisions</a><a href="#contact">Contact</a></div></footer>
+
+<script>
+const glow=document.getElementById('cursorGlow');document.addEventListener('mousemove',(e)=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px';});
+const nav=document.getElementById('nav');window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>50));
+const menuToggle=document.getElementById('menuToggle'),navLinks=document.getElementById('navLinks');menuToggle.addEventListener('click',()=>navLinks.classList.toggle('open'));navLinks.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>navLinks.classList.remove('open')));
+const observer=new IntersectionObserver((e)=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible');});},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});});
+</script>
+</body>
+</html>

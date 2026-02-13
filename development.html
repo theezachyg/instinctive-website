@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instinctive Development — App, Web & Software | Instinctive, INC.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #080808; --surface: #111111; --surface-2: #1a1a1a; --surface-3: #0e0e0e;
+  --border: #222222; --border-hover: #333333;
+  --text: #f0f0f0; --text-muted: #888888; --text-dim: #555555;
+  --accent: #c8ff00; --accent-dim: rgba(200, 255, 0, 0.08); --accent-glow: rgba(200, 255, 0, 0.15);
+  --white: #ffffff;
+}
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--accent); color: var(--bg); }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.cursor-glow { position: fixed; width: 600px; height: 600px; border-radius: 50%; pointer-events: none; z-index: 0; background: radial-gradient(circle, rgba(200, 255, 0, 0.03) 0%, transparent 70%); transform: translate(-50%, -50%); transition: transform 0.1s ease-out; }
+.noise { position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
+
+/* ─── NAV ─── */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 0 3rem; height: 72px; display: flex; align-items: center; justify-content: space-between; background: rgba(8, 8, 8, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid transparent; transition: border-color 0.3s ease; }
+nav.scrolled { border-bottom-color: var(--border); }
+.nav-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.15rem; letter-spacing: -0.03em; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 0.6rem; }
+.nav-logo .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: pulse-dot 2s ease-in-out infinite; }
+@keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+.nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
+.nav-links a { font-size: 0.82rem; font-weight: 500; color: var(--text-muted); text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.25s ease; }
+.nav-links a:hover { color: var(--white); }
+.nav-cta { padding: 0.55rem 1.4rem; background: var(--white); color: var(--bg) !important; border-radius: 100px; font-weight: 600 !important; transition: background 0.25s ease, transform 0.2s ease !important; }
+.nav-cta:hover { background: var(--accent) !important; transform: scale(1.03); }
+.menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+.menu-toggle span { width: 24px; height: 2px; background: var(--white); transition: 0.3s ease; }
+
+.back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; font-weight: 500; color: var(--text-dim); text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2rem; transition: color 0.3s ease; opacity: 0; animation: fadeUp 0.6s ease forwards 0.1s; }
+.back-link:hover { color: var(--accent); }
+.back-link svg { width: 16px; height: 16px; stroke: currentColor; }
+
+/* ─── HERO ─── */
+.division-hero { min-height: 85vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 3rem 5rem; position: relative; overflow: hidden; }
+.division-hero-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(200, 255, 0, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(200, 255, 0, 0.02) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 70% 60% at 70% 40%, black 10%, transparent 80%); }
+.division-hero-gradient { position: absolute; top: 0; right: 0; width: 50%; height: 100%; background: radial-gradient(ellipse at 80% 30%, rgba(200, 255, 0, 0.04), transparent 70%); pointer-events: none; }
+
+/* Terminal decoration */
+.hero-terminal {
+  position: absolute; right: 5%; top: 20%; width: 360px;
+  background: rgba(17, 17, 17, 0.6); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden; opacity: 0.12;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+  pointer-events: none;
+}
+.hero-terminal-bar {
+  height: 28px; background: rgba(34, 34, 34, 0.8);
+  display: flex; align-items: center; padding: 0 10px; gap: 6px;
+}
+.hero-terminal-dot { width: 8px; height: 8px; border-radius: 50%; }
+.hero-terminal-dot:nth-child(1) { background: #ff5f57; }
+.hero-terminal-dot:nth-child(2) { background: #febc2e; }
+.hero-terminal-dot:nth-child(3) { background: #28c840; }
+.hero-terminal-body { padding: 14px; color: var(--text-dim); line-height: 1.8; }
+.hero-terminal-body .t-accent { color: var(--accent); }
+.hero-terminal-body .t-muted { color: #444; }
+.hero-terminal-cursor { display: inline-block; width: 7px; height: 14px; background: var(--accent); animation: blink 1s step-end infinite; vertical-align: middle; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.hero-content { position: relative; z-index: 2; max-width: 800px; }
+
+.division-badge { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.45rem 1rem 0.45rem 0.55rem; background: var(--accent-dim); border: 1px solid rgba(200, 255, 0, 0.12); border-radius: 100px; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.6s ease forwards 0.2s; }
+.division-badge-icon { width: 28px; height: 28px; border-radius: 50%; background: rgba(200, 255, 0, 0.12); display: flex; align-items: center; justify-content: center; }
+.division-badge-icon svg { width: 14px; height: 14px; stroke: var(--accent); }
+.division-badge-text { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+
+.division-hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.8rem, 6.5vw, 5.5rem); font-weight: 700; line-height: 0.95; letter-spacing: -0.04em; color: var(--white); opacity: 0; animation: fadeUp 0.8s ease forwards 0.35s; }
+.division-hero h1 .accent-text { color: var(--accent); }
+
+.division-hero-desc { font-size: 1.15rem; font-weight: 400; color: var(--text-muted); max-width: 550px; line-height: 1.7; margin-top: 1.8rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.5s; }
+
+.hero-meta { display: flex; gap: 3rem; margin-top: 3rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.65s; }
+.hero-meta-item { display: flex; flex-direction: column; gap: 0.2rem; }
+.hero-meta-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; }
+.hero-meta-value { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--white); }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ─── SHARED ─── */
+section { padding: 7rem 3rem; position: relative; }
+.section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem; }
+.section-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; letter-spacing: -0.03em; color: var(--white); max-width: 700px; line-height: 1.1; }
+.section-desc { color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; max-width: 560px; margin-top: 1.2rem; }
+.section-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 3rem; margin-bottom: 4rem; }
+.section-header-right { font-size: 0.88rem; color: var(--text-muted); max-width: 380px; line-height: 1.65; text-align: right; }
+
+/* ─── PHILOSOPHY ─── */
+.philosophy-strip { padding: 4rem 3rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 4rem; }
+.philosophy-quote { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 600; color: var(--white); line-height: 1.35; letter-spacing: -0.02em; flex: 1; }
+.philosophy-quote span { color: var(--accent); }
+.philosophy-attr { font-size: 0.78rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; min-width: 160px; text-align: right; }
+
+/* ─── TECH STACK ─── */
+.stack-section {
+  padding: 5rem 3rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: var(--surface-3);
+}
+
+.stack-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 3rem;
+}
+
+.stack-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 2rem; transition: border-color 0.3s ease;
+}
+.stack-card:hover { border-color: var(--border-hover); }
+
+.stack-card-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+  color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 0.8rem; opacity: 0.6;
+}
+.stack-card h4 {
+  font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 600;
+  color: var(--white); margin-bottom: 1rem;
+}
+
+.stack-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.stack-tag {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 500;
+  color: var(--text-dim); padding: 0.3rem 0.6rem;
+  border: 1px solid var(--border); border-radius: 4px;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+.stack-card:hover .stack-tag { border-color: var(--border-hover); color: var(--text-muted); }
+
+/* ─── CAPABILITIES ─── */
+#capabilities { background: var(--bg); }
+
+.capabilities-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.capability-card { background: var(--surface); padding: 2.5rem; position: relative; transition: background 0.4s ease; cursor: default; }
+.capability-card:hover { background: var(--surface-2); }
+.capability-card::after { content: ''; position: absolute; bottom: 0; left: 2.5rem; right: 2.5rem; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity 0.4s ease; }
+.capability-card:hover::after { opacity: 0.3; }
+.capability-number { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 1.2rem; opacity: 0.5; }
+.capability-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 600; color: var(--white); margin-bottom: 0.8rem; letter-spacing: -0.01em; }
+.capability-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.65; }
+.capability-list { list-style: none; margin-top: 1.2rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.capability-list li { font-size: 0.78rem; color: var(--text-dim); display: flex; align-items: center; gap: 0.5rem; transition: color 0.3s ease; }
+.capability-card:hover .capability-list li { color: var(--text-muted); }
+.capability-list li::before { content: ''; width: 4px; height: 4px; background: var(--accent); border-radius: 50%; opacity: 0.4; flex-shrink: 0; }
+
+/* ─── WORK ─── */
+#work { background: var(--surface-3); border-top: 1px solid var(--border); }
+.work-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+.work-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); cursor: default; }
+.work-card:hover { border-color: var(--border-hover); transform: translateY(-4px); }
+.work-card-featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; }
+.work-card-featured .work-visual { min-height: 400px; }
+.work-visual { background: var(--surface-2); min-height: 260px; position: relative; overflow: hidden; }
+.work-visual-inner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+
+/* Dev-specific visual patterns */
+.visual-pattern { width: 100%; height: 100%; position: relative; overflow: hidden; }
+
+.vp-code {
+  position: absolute; inset: 8%; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem; color: rgba(200, 255, 0, 0.08); line-height: 1.8;
+  overflow: hidden;
+}
+.vp-code .hl { color: rgba(200, 255, 0, 0.15); }
+
+.vp-browser {
+  position: absolute; top: 12%; left: 10%; right: 10%; bottom: 12%;
+  border: 1px solid rgba(200, 255, 0, 0.06); border-radius: 8px; overflow: hidden;
+}
+.vp-browser-bar {
+  height: 22px; background: rgba(200, 255, 0, 0.02);
+  border-bottom: 1px solid rgba(200, 255, 0, 0.04);
+  display: flex; align-items: center; padding: 0 8px; gap: 4px;
+}
+.vp-browser-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(200, 255, 0, 0.08); }
+.vp-browser-body { padding: 12px; }
+.vp-browser-line {
+  height: 4px; background: rgba(200, 255, 0, 0.04); border-radius: 2px; margin-bottom: 6px;
+}
+
+.vp-mobile {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 80px; height: 150px; border: 1px solid rgba(200, 255, 0, 0.08);
+  border-radius: 12px; overflow: hidden;
+}
+.vp-mobile-notch {
+  width: 30px; height: 6px; background: rgba(200, 255, 0, 0.04);
+  border-radius: 0 0 4px 4px; margin: 0 auto;
+}
+.vp-mobile-body { padding: 8px; }
+.vp-mobile-block {
+  height: 12px; background: rgba(200, 255, 0, 0.04); border-radius: 3px; margin-bottom: 5px;
+}
+.vp-mobile-block.short { width: 60%; }
+
+.vp-nodes {
+  position: absolute; inset: 0;
+}
+.vp-node-circle {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(200, 255, 0, 0.06);
+}
+.vp-node-connector {
+  position: absolute; height: 1px;
+  background: rgba(200, 255, 0, 0.04);
+  transform-origin: left center;
+}
+
+.work-info { padding: 2rem 2.5rem; }
+.work-category { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.6rem; opacity: 0.7; }
+.work-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 700; color: var(--white); letter-spacing: -0.02em; margin-bottom: 0.6rem; }
+.work-client { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem; }
+.work-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 1.5rem; }
+.work-results { display: flex; gap: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
+.work-result { display: flex; flex-direction: column; gap: 0.15rem; }
+.work-result-value { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
+.work-result-label { font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* ─── PROCESS / DEV WORKFLOW ─── */
+.workflow-section {
+  padding: 5rem 3rem; background: var(--surface);
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+}
+
+.workflow-grid {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; margin-top: 4rem;
+  position: relative;
+}
+.workflow-grid::before {
+  content: ''; position: absolute; top: 28px; left: 8%; right: 8%;
+  height: 1px; background: var(--border);
+}
+
+.workflow-step {
+  text-align: center; position: relative; padding: 0 0.8rem;
+}
+.workflow-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--surface); border: 2px solid var(--border);
+  margin: 0 auto 1.5rem; position: relative; z-index: 1;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+.workflow-step:hover .workflow-dot { border-color: var(--accent); background: var(--accent-dim); }
+
+.workflow-step h4 {
+  font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 600;
+  color: var(--white); margin-bottom: 0.5rem; transition: color 0.3s ease;
+}
+.workflow-step:hover h4 { color: var(--accent); }
+.workflow-step p {
+  font-size: 0.75rem; color: var(--text-dim); line-height: 1.5;
+}
+
+/* ─── CLIENTS ─── */
+#clients { border-top: 1px solid var(--border); }
+.clients-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end; margin-bottom: 4rem; }
+.clients-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.client-cell { background: var(--surface); padding: 2.5rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 0.8rem; min-height: 140px; transition: background 0.3s ease; }
+.client-cell:hover { background: var(--surface-2); }
+.client-logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text-dim); letter-spacing: -0.02em; transition: color 0.3s ease; }
+.client-cell:hover .client-logo { color: var(--white); }
+.client-type { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.6; }
+
+/* ─── SERVICES ─── */
+#services { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.services-list { margin-top: 4rem; }
+.service-row { display: grid; grid-template-columns: 2fr 3fr 1fr; gap: 2rem; align-items: center; padding: 1.8rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.4s ease; cursor: default; }
+.service-row:first-child { border-top: 1px solid var(--border); }
+.service-row:hover { padding-left: 1rem; }
+.service-row h4 { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 600; color: var(--white); letter-spacing: -0.01em; transition: color 0.3s ease; }
+.service-row:hover h4 { color: var(--accent); }
+.service-row p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+.service-arrow { display: flex; justify-content: flex-end; color: var(--text-dim); transition: color 0.3s ease, transform 0.3s ease; }
+.service-row:hover .service-arrow { color: var(--accent); transform: translateX(4px); }
+.svc-arrow-svg { width: 20px; height: 20px; }
+
+/* ─── BUTTONS ─── */
+.btn-primary { padding: 0.85rem 2.2rem; background: var(--accent); color: var(--bg); font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.04em; text-transform: uppercase; border: none; border-radius: 100px; cursor: pointer; text-decoration: none; transition: transform 0.2s ease, box-shadow 0.3s ease; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200, 255, 0, 0.25); }
+.btn-secondary { padding: 0.85rem 2.2rem; background: transparent; color: var(--text); font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.04em; text-transform: uppercase; border: 1px solid var(--border); border-radius: 100px; cursor: pointer; text-decoration: none; transition: border-color 0.3s ease, background 0.3s ease; }
+.btn-secondary:hover { border-color: var(--text-muted); background: rgba(255,255,255,0.03); }
+
+/* ─── CTA ─── */
+.cta-section { padding: 8rem 3rem; text-align: center; position: relative; overflow: hidden; }
+.cta-glow { position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(200, 255, 0, 0.06), transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.cta-section .section-title { max-width: 550px; margin: 0 auto; text-align: center; }
+.cta-section .section-desc { max-width: 440px; margin: 1.2rem auto 0; text-align: center; }
+.cta-actions { display: flex; justify-content: center; gap: 1rem; margin-top: 2.5rem; position: relative; z-index: 1; }
+
+/* ─── FOOTER ─── */
+footer { padding: 3rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.footer-left { font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+.footer-left span { color: var(--text-dim); font-weight: 400; font-size: 0.78rem; }
+.footer-right { display: flex; gap: 2rem; }
+.footer-right a { font-size: 0.78rem; color: var(--text-dim); text-decoration: none; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; transition: color 0.3s ease; }
+.footer-right a:hover { color: var(--accent); }
+
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1024px) {
+  .capabilities-grid { grid-template-columns: repeat(2, 1fr); }
+  .work-card-featured { grid-template-columns: 1fr; }
+  .clients-grid { grid-template-columns: repeat(3, 1fr); }
+  .clients-intro { grid-template-columns: 1fr; gap: 1.5rem; }
+  .stack-grid { grid-template-columns: repeat(2, 1fr); }
+  .workflow-grid { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  .workflow-grid::before { display: none; }
+}
+@media (max-width: 768px) {
+  nav { padding: 0 1.5rem; }
+  .nav-links { display: none; }
+  .menu-toggle { display: flex; }
+  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0; background: rgba(8, 8, 8, 0.97); backdrop-filter: blur(20px); padding: 2rem 1.5rem; gap: 1.5rem; border-bottom: 1px solid var(--border); }
+  section { padding: 4rem 1.5rem; }
+  .division-hero { padding: 7rem 1.5rem 3rem; min-height: auto; }
+  .capabilities-grid { grid-template-columns: 1fr; }
+  .work-grid { grid-template-columns: 1fr; }
+  .work-card-featured { grid-template-columns: 1fr; }
+  .clients-grid { grid-template-columns: repeat(2, 1fr); }
+  .service-row { grid-template-columns: 1fr; gap: 0.5rem; }
+  .service-arrow { display: none; }
+  .hero-meta { flex-wrap: wrap; gap: 1.5rem; }
+  .philosophy-strip { flex-direction: column; gap: 1.5rem; padding: 3rem 1.5rem; }
+  .philosophy-attr { text-align: left; }
+  .cta-actions { flex-direction: column; align-items: center; }
+  footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+  .footer-right { flex-wrap: wrap; justify-content: center; }
+  .work-results { flex-wrap: wrap; gap: 1.2rem; }
+  .section-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .section-header-right { text-align: left; }
+  .stack-grid { grid-template-columns: 1fr; }
+  .workflow-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+  .hero-terminal { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ─── NAV ─── -->
+<nav id="nav">
+  <a href="/" class="nav-logo"><span class="dot"></span> INSTINCTIVE</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/#divisions">Divisions</a></li>
+    <li><a href="#capabilities">Capabilities</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#clients">Clients</a></li>
+    <li><a href="#contact" class="nav-cta">Start a Build</a></li>
+  </ul>
+  <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="division-hero">
+  <div class="division-hero-bg"></div>
+  <div class="division-hero-gradient"></div>
+
+  <div class="hero-terminal">
+    <div class="hero-terminal-bar">
+      <div class="hero-terminal-dot"></div>
+      <div class="hero-terminal-dot"></div>
+      <div class="hero-terminal-dot"></div>
+    </div>
+    <div class="hero-terminal-body">
+      <span class="t-muted">$</span> <span class="t-accent">instinctive</span> init --project<br>
+      <span class="t-muted">→</span> Scaffolding architecture...<br>
+      <span class="t-muted">→</span> Configuring stack...<br>
+      <span class="t-muted">→</span> Deploying to <span class="t-accent">production</span><br>
+      <span class="t-muted">→</span> Running tests... <span class="t-accent">all passed</span><br>
+      <span class="t-muted">→</span> Performance audit: <span class="t-accent">98/100</span><br>
+      <span class="t-muted">$</span> <span class="hero-terminal-cursor"></span>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <a href="/" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      All Divisions
+    </a>
+
+    <div class="division-badge">
+      <div class="division-badge-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <span class="division-badge-text">App, Web &amp; Software Development</span>
+    </div>
+
+    <h1>
+      Instinctive<br>
+      <span class="accent-text">Development</span>
+    </h1>
+
+    <p class="division-hero-desc">
+      Custom software, web platforms, and mobile applications — architected for scale, engineered for performance, and built with the same data-driven rigor we bring to everything. No templates. No shortcuts. Just production-grade code.
+    </p>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Focus</span>
+        <span class="hero-meta-value">Product & Platform Engineering</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Approach</span>
+        <span class="hero-meta-value">Agile, Iterative, Tested</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Scope</span>
+        <span class="hero-meta-value">MVP to Enterprise</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PHILOSOPHY ─── -->
+<div class="philosophy-strip reveal">
+  <div class="philosophy-quote">
+    "Good code isn't clever — it's <span>clear</span>. The best architecture is the one your team can <span>ship, scale, and maintain</span> long after we've left."
+  </div>
+  <div class="philosophy-attr">
+    Instinctive Development<br>Engineering Philosophy
+  </div>
+</div>
+
+<!-- ─── TECH STACK ─── -->
+<div class="stack-section">
+  <div class="reveal">
+    <div class="section-label">Stack</div>
+    <h2 class="section-title">Tools we trust. Stacks we've proven.</h2>
+    <p class="section-desc">We're stack-agnostic by principle and experienced across the modern landscape. We choose the right tool for the job — not the trendiest one.</p>
+  </div>
+
+  <div class="stack-grid reveal">
+    <div class="stack-card">
+      <div class="stack-card-label">Frontend</div>
+      <h4>Web & Interface</h4>
+      <div class="stack-tags">
+        <span class="stack-tag">React</span>
+        <span class="stack-tag">Next.js</span>
+        <span class="stack-tag">Vue</span>
+        <span class="stack-tag">Nuxt</span>
+        <span class="stack-tag">TypeScript</span>
+        <span class="stack-tag">Tailwind</span>
+        <span class="stack-tag">Svelte</span>
+      </div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-card-label">Backend</div>
+      <h4>APIs & Services</h4>
+      <div class="stack-tags">
+        <span class="stack-tag">Node.js</span>
+        <span class="stack-tag">Python</span>
+        <span class="stack-tag">Go</span>
+        <span class="stack-tag">Rust</span>
+        <span class="stack-tag">GraphQL</span>
+        <span class="stack-tag">REST</span>
+        <span class="stack-tag">gRPC</span>
+      </div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-card-label">Mobile</div>
+      <h4>iOS & Android</h4>
+      <div class="stack-tags">
+        <span class="stack-tag">React Native</span>
+        <span class="stack-tag">Flutter</span>
+        <span class="stack-tag">Swift</span>
+        <span class="stack-tag">Kotlin</span>
+        <span class="stack-tag">Expo</span>
+      </div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-card-label">Infrastructure</div>
+      <h4>Cloud & DevOps</h4>
+      <div class="stack-tags">
+        <span class="stack-tag">AWS</span>
+        <span class="stack-tag">GCP</span>
+        <span class="stack-tag">Azure</span>
+        <span class="stack-tag">Docker</span>
+        <span class="stack-tag">Kubernetes</span>
+        <span class="stack-tag">Terraform</span>
+        <span class="stack-tag">CI/CD</span>
+      </div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-card-label">Data</div>
+      <h4>Storage & Processing</h4>
+      <div class="stack-tags">
+        <span class="stack-tag">PostgreSQL</span>
+        <span class="stack-tag">MongoDB</span>
+        <span class="stack-tag">Redis</span>
+        <span class="stack-tag">Elasticsearch</span>
+        <span class="stack-tag">Kafka</span>
+        <span class="stack-tag">Supabase</span>
+      </div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-card-label">CMS & Commerce</div>
+      <h4>Platforms</h4>
+      <div class="stack-tags">
+        <span class="stack-tag">Shopify</span>
+        <span class="stack-tag">WordPress</span>
+        <span class="stack-tag">Sanity</span>
+        <span class="stack-tag">Contentful</span>
+        <span class="stack-tag">Strapi</span>
+        <span class="stack-tag">Webflow</span>
+      </div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-card-label">AI & ML</div>
+      <h4>Intelligence Layer</h4>
+      <div class="stack-tags">
+        <span class="stack-tag">OpenAI</span>
+        <span class="stack-tag">Anthropic</span>
+        <span class="stack-tag">LangChain</span>
+        <span class="stack-tag">Pinecone</span>
+        <span class="stack-tag">TensorFlow</span>
+        <span class="stack-tag">PyTorch</span>
+      </div>
+    </div>
+    <div class="stack-card">
+      <div class="stack-card-label">Testing & QA</div>
+      <h4>Quality Assurance</h4>
+      <div class="stack-tags">
+        <span class="stack-tag">Jest</span>
+        <span class="stack-tag">Cypress</span>
+        <span class="stack-tag">Playwright</span>
+        <span class="stack-tag">Selenium</span>
+        <span class="stack-tag">Lighthouse</span>
+        <span class="stack-tag">Sentry</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── CAPABILITIES ─── -->
+<section id="capabilities">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label">01 — Capabilities</div>
+      <h2 class="section-title">We build things that work.</h2>
+    </div>
+    <div class="section-header-right">
+      From early-stage MVPs to enterprise platform overhauls — our engineering team delivers production-grade software on time and on budget.
+    </div>
+  </div>
+
+  <div class="capabilities-grid reveal">
+    <div class="capability-card">
+      <div class="capability-number">001</div>
+      <h3>Web Applications</h3>
+      <p>Custom web platforms — dashboards, portals, marketplaces, and SaaS products built with modern frameworks and scalable architecture.</p>
+      <ul class="capability-list">
+        <li>SaaS Platforms</li>
+        <li>Admin Dashboards & Portals</li>
+        <li>Marketplace & Multi-Tenant Apps</li>
+        <li>Progressive Web Apps (PWA)</li>
+        <li>Internal Tools & Automation</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">002</div>
+      <h3>Mobile Applications</h3>
+      <p>Native and cross-platform mobile apps — from consumer-facing products to enterprise tools, built for iOS and Android.</p>
+      <ul class="capability-list">
+        <li>iOS & Android Native</li>
+        <li>Cross-Platform (React Native / Flutter)</li>
+        <li>App Store Optimization & Launch</li>
+        <li>Push Notification Systems</li>
+        <li>Offline-First Architecture</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">003</div>
+      <h3>Websites & Marketing Sites</h3>
+      <p>High-performance websites that load fast, rank well, and convert — from corporate sites to editorial platforms and landing pages.</p>
+      <ul class="capability-list">
+        <li>Corporate & Brand Websites</li>
+        <li>Headless CMS Implementations</li>
+        <li>Landing Pages & Microsites</li>
+        <li>Blog & Editorial Platforms</li>
+        <li>Performance Optimization</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">004</div>
+      <h3>E-Commerce Development</h3>
+      <p>Custom storefronts and commerce platforms — Shopify Plus, headless commerce, and bespoke solutions built for conversion and scale.</p>
+      <ul class="capability-list">
+        <li>Shopify / Shopify Plus</li>
+        <li>Headless Commerce (Hydrogen)</li>
+        <li>Custom Cart & Checkout</li>
+        <li>Subscription & Membership Systems</li>
+        <li>Multi-Currency & International</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">005</div>
+      <h3>API & Backend Engineering</h3>
+      <p>Scalable APIs, microservices, and backend systems — the invisible infrastructure that powers everything your users touch.</p>
+      <ul class="capability-list">
+        <li>RESTful & GraphQL APIs</li>
+        <li>Microservices Architecture</li>
+        <li>Third-Party Integrations</li>
+        <li>Authentication & Authorization</li>
+        <li>Real-Time & WebSocket Systems</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">006</div>
+      <h3>DevOps & Cloud Infrastructure</h3>
+      <p>CI/CD pipelines, cloud architecture, containerization, and monitoring — so your software deploys reliably and scales automatically.</p>
+      <ul class="capability-list">
+        <li>CI/CD Pipeline Setup</li>
+        <li>Cloud Architecture (AWS / GCP / Azure)</li>
+        <li>Container Orchestration</li>
+        <li>Infrastructure as Code</li>
+        <li>Monitoring, Logging & Alerting</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ─── WORK ─── -->
+<section id="work">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label">02 — Selected Work</div>
+      <h2 class="section-title">Shipped, scaled, running.</h2>
+    </div>
+    <div class="section-header-right">
+      Products and platforms we've taken from concept to production — and that are still running in the wild.
+    </div>
+  </div>
+
+  <div class="work-grid reveal">
+    <!-- Featured -->
+    <div class="work-card work-card-featured">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern" style="background: linear-gradient(135deg, var(--surface-2), var(--surface));">
+            <div class="vp-browser">
+              <div class="vp-browser-bar">
+                <div class="vp-browser-dot"></div><div class="vp-browser-dot"></div><div class="vp-browser-dot"></div>
+              </div>
+              <div class="vp-browser-body">
+                <div class="vp-browser-line" style="width: 70%;"></div>
+                <div class="vp-browser-line" style="width: 100%;"></div>
+                <div class="vp-browser-line" style="width: 85%;"></div>
+                <div class="vp-browser-line" style="width: 60%; margin-top: 16px;"></div>
+                <div class="vp-browser-line" style="width: 100%;"></div>
+                <div class="vp-browser-line" style="width: 90%;"></div>
+                <div class="vp-browser-line" style="width: 45%; margin-top: 16px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info" style="display:flex;flex-direction:column;justify-content:center;">
+        <div class="work-category">SaaS Platform</div>
+        <div class="work-title">Enterprise Workflow Platform</div>
+        <div class="work-client">Confidential — B2B SaaS</div>
+        <div class="work-desc">Full-stack SaaS platform — React frontend, Node.js microservices, PostgreSQL, and AWS infrastructure. Multi-tenant architecture supporting 500+ organizations with real-time collaboration, custom workflows, and role-based access control.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">500+</span>
+            <span class="work-result-label">Organizations</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">99.97%</span>
+            <span class="work-result-label">Uptime</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">14 Mo.</span>
+            <span class="work-result-label">Build to Scale</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 2 -->
+    <div class="work-card">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern" style="background: var(--surface-2);">
+            <div class="vp-mobile">
+              <div class="vp-mobile-notch"></div>
+              <div class="vp-mobile-body">
+                <div class="vp-mobile-block"></div>
+                <div class="vp-mobile-block short"></div>
+                <div class="vp-mobile-block"></div>
+                <div class="vp-mobile-block short"></div>
+                <div class="vp-mobile-block"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">Mobile App</div>
+        <div class="work-title">Consumer Fitness App — iOS & Android</div>
+        <div class="work-client">Confidential — Health & Wellness</div>
+        <div class="work-desc">Cross-platform mobile app built with React Native — workout tracking, social features, subscription billing, and AI-powered recommendation engine. Launched to top 100 in Health & Fitness.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">280K</span>
+            <span class="work-result-label">Downloads (Year 1)</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">4.8★</span>
+            <span class="work-result-label">App Store Rating</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 3 -->
+    <div class="work-card">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern" style="background: linear-gradient(180deg, var(--surface-2), var(--surface));">
+            <div class="vp-code">
+<span class="hl">const</span> pipeline = <span class="hl">async</span> () => {<br>
+&nbsp;&nbsp;<span class="hl">await</span> ingest(data);<br>
+&nbsp;&nbsp;<span class="hl">await</span> transform(schema);<br>
+&nbsp;&nbsp;<span class="hl">await</span> validate(rules);<br>
+&nbsp;&nbsp;<span class="hl">return</span> deploy(prod);<br>
+};<br><br>
+<span class="hl">export</span> { pipeline };<br>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">Custom Software</div>
+        <div class="work-title">Data Pipeline & Dashboard Suite</div>
+        <div class="work-client">Confidential — Logistics Company</div>
+        <div class="work-desc">Custom data ingestion pipeline and executive dashboard — real-time fleet tracking, automated reporting, and predictive maintenance alerts. Replaced three legacy systems with one unified platform.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">3→1</span>
+            <span class="work-result-label">Systems Consolidated</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">-40%</span>
+            <span class="work-result-label">Operational Cost</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 4 -->
+    <div class="work-card">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern" style="background: var(--surface-2);">
+            <div class="vp-browser" style="top: 15%; left: 12%; right: 12%; bottom: 15%;">
+              <div class="vp-browser-bar">
+                <div class="vp-browser-dot"></div><div class="vp-browser-dot"></div><div class="vp-browser-dot"></div>
+              </div>
+              <div class="vp-browser-body">
+                <div class="vp-browser-line" style="width: 40%; height: 6px; background: rgba(200,255,0,0.06);"></div>
+                <div class="vp-browser-line" style="width: 100%; height: 40px; background: rgba(200,255,0,0.03); margin-top: 8px;"></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-top: 8px;">
+                  <div class="vp-browser-line" style="height: 30px; margin: 0;"></div>
+                  <div class="vp-browser-line" style="height: 30px; margin: 0;"></div>
+                  <div class="vp-browser-line" style="height: 30px; margin: 0;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">E-Commerce</div>
+        <div class="work-title">Headless Shopify Plus Build</div>
+        <div class="work-client">Confidential — DTC Fashion Brand</div>
+        <div class="work-desc">Custom headless storefront on Shopify Plus with Hydrogen — sub-second page loads, custom checkout, internationalization (4 currencies), and a loyalty/rewards integration.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">+68%</span>
+            <span class="work-result-label">Conversion Rate</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">0.8s</span>
+            <span class="work-result-label">Avg. Page Load</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 5 -->
+    <div class="work-card">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern" style="background: linear-gradient(225deg, var(--surface-2), rgba(200,255,0,0.02));">
+            <div class="vp-nodes" id="nodeVis"></div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">API & Infrastructure</div>
+        <div class="work-title">Real-Time API Platform</div>
+        <div class="work-client">Confidential — Fintech Startup</div>
+        <div class="work-desc">High-throughput REST + WebSocket API platform handling 50K concurrent connections — real-time price feeds, transaction processing, and compliance logging. Built on Go with Kubernetes orchestration.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">50K</span>
+            <span class="work-result-label">Concurrent Connections</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">&lt;12ms</span>
+            <span class="work-result-label">Avg. Latency</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DEV WORKFLOW ─── -->
+<div class="workflow-section">
+  <div class="reveal">
+    <div class="section-label">03 — Development Workflow</div>
+    <h2 class="section-title">How we ship.</h2>
+    <p class="section-desc">Agile sprints, continuous delivery, and transparent communication — from kickoff to launch and beyond.</p>
+  </div>
+
+  <div class="workflow-grid reveal">
+    <div class="workflow-step">
+      <div class="workflow-dot"></div>
+      <h4>Discovery</h4>
+      <p>Requirements, user stories, technical audit, and architecture planning.</p>
+    </div>
+    <div class="workflow-step">
+      <div class="workflow-dot"></div>
+      <h4>Design</h4>
+      <p>UX research, wireframes, prototypes, and design system creation.</p>
+    </div>
+    <div class="workflow-step">
+      <div class="workflow-dot"></div>
+      <h4>Build</h4>
+      <p>Sprint-based development with weekly demos and continuous integration.</p>
+    </div>
+    <div class="workflow-step">
+      <div class="workflow-dot"></div>
+      <h4>Test</h4>
+      <p>Automated testing, QA, performance audits, and security review.</p>
+    </div>
+    <div class="workflow-step">
+      <div class="workflow-dot"></div>
+      <h4>Launch</h4>
+      <p>Staged rollout, monitoring setup, and go-live support.</p>
+    </div>
+    <div class="workflow-step">
+      <div class="workflow-dot"></div>
+      <h4>Iterate</h4>
+      <p>Post-launch analytics, user feedback, and continuous improvement.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ─── CLIENTS ─── -->
+<section id="clients">
+  <div class="clients-intro reveal">
+    <div>
+      <div class="section-label">04 — Clients & Partners</div>
+      <h2 class="section-title">Trusted to build what matters.</h2>
+    </div>
+    <p class="section-desc" style="margin-top:0;">
+      From seed-stage startups building their first product to enterprises modernizing legacy systems.
+    </p>
+  </div>
+
+  <div class="clients-grid reveal">
+    <div class="client-cell"><div class="client-logo">NovaTech</div><div class="client-type">Enterprise SaaS</div></div>
+    <div class="client-cell"><div class="client-logo">Vantage Fintech</div><div class="client-type">Financial Services</div></div>
+    <div class="client-cell"><div class="client-logo">Clearpath</div><div class="client-type">Logistics</div></div>
+    <div class="client-cell"><div class="client-logo">Kinetic Sports</div><div class="client-type">Health & Fitness</div></div>
+    <div class="client-cell"><div class="client-logo">Onda</div><div class="client-type">CPG / DTC</div></div>
+    <div class="client-cell"><div class="client-logo">Meridian Health</div><div class="client-type">Healthcare</div></div>
+    <div class="client-cell"><div class="client-logo">Terraform Labs</div><div class="client-type">Deep Tech</div></div>
+    <div class="client-cell"><div class="client-logo">Ironclad</div><div class="client-type">Cybersecurity</div></div>
+    <div class="client-cell"><div class="client-logo">Primrose</div><div class="client-type">Beauty / DTC</div></div>
+    <div class="client-cell"><div class="client-logo">Vertex Capital</div><div class="client-type">Venture Capital</div></div>
+    <div class="client-cell"><div class="client-logo">Arclight</div><div class="client-type">Entertainment</div></div>
+    <div class="client-cell"><div class="client-logo">Solstice Media</div><div class="client-type">Media / Publishing</div></div>
+  </div>
+</section>
+
+<!-- ─── SERVICES ─── -->
+<section id="services">
+  <div class="reveal">
+    <div class="section-label">05 — Full Service Menu</div>
+    <h2 class="section-title">Everything from zero to production.</h2>
+    <p class="section-desc">Standalone engagements, embedded teams, or full product builds.</p>
+  </div>
+
+  <div class="services-list reveal">
+    <div class="service-row">
+      <h4>Web Application Development</h4>
+      <p>SaaS platforms, dashboards, portals, marketplaces, and custom web apps — React, Next.js, Vue, and more.</p>
+      <div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Mobile App Development</h4>
+      <p>iOS, Android, and cross-platform — React Native, Flutter, Swift, and Kotlin. From MVP to App Store launch.</p>
+      <div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>E-Commerce & Shopify Development</h4>
+      <p>Custom storefronts, headless commerce, theme development, checkout optimization, and Shopify Plus builds.</p>
+      <div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>API & Backend Engineering</h4>
+      <p>REST, GraphQL, microservices, real-time systems, integrations, and scalable backend architecture.</p>
+      <div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>UX/UI Design & Prototyping</h4>
+      <p>User research, wireframing, high-fidelity design, design systems, and interactive prototyping in Figma.</p>
+      <div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>DevOps & Cloud Infrastructure</h4>
+      <p>CI/CD, containerization, cloud architecture, monitoring, infrastructure-as-code, and cost optimization.</p>
+      <div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>AI & LLM Integration</h4>
+      <p>Custom AI features, chatbots, recommendation engines, RAG pipelines, and LLM-powered automation.</p>
+      <div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>QA, Testing & Code Audits</h4>
+      <p>Automated test suites, manual QA, performance auditing, security review, and codebase health assessments.</p>
+      <div class="service-arrow"><svg class="svc-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section class="cta-section" id="contact">
+  <div class="cta-glow"></div>
+  <div class="reveal">
+    <div class="section-label" style="text-align:center;">Let's Build</div>
+    <h2 class="section-title">Got a product<br>that needs to exist?</h2>
+    <p class="section-desc">
+      Tell us what you're building. We'll scope it, architect it, and ship it — with the code quality your business deserves.
+    </p>
+    <div class="cta-actions">
+      <a href="mailto:dev@instinctive.xyz" class="btn-primary">Start a Build</a>
+      <a href="/" class="btn-secondary">All Divisions</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-left">Instinctive, INC. <span>&nbsp;© 2025. All rights reserved.</span></div>
+  <div class="footer-right">
+    <a href="https://instinctive.xyz" target="_blank">instinctive.xyz</a>
+    <a href="/">Home</a>
+    <a href="/#divisions">Divisions</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+const glow = document.getElementById('cursorGlow');
+document.addEventListener('mousemove', (e) => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; });
+
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
+
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.getElementById('navLinks');
+menuToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => navLinks.classList.remove('open')); });
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// Generate node visualization
+function generateNodes() {
+  const container = document.getElementById('nodeVis');
+  if (!container) return;
+  const nodes = [];
+  for (let i = 0; i < 10; i++) {
+    const x = 15 + Math.random() * 70;
+    const y = 15 + Math.random() * 70;
+    const size = 8 + Math.random() * 20;
+    nodes.push({ x, y, size });
+    const el = document.createElement('div');
+    el.className = 'vp-node-circle';
+    el.style.left = x + '%';
+    el.style.top = y + '%';
+    el.style.width = size + 'px';
+    el.style.height = size + 'px';
+    container.appendChild(el);
+  }
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[j].x - nodes[i].x;
+      const dy = nodes[j].y - nodes[i].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 30) {
+        const line = document.createElement('div');
+        line.className = 'vp-node-connector';
+        line.style.left = nodes[i].x + '%';
+        line.style.top = nodes[i].y + '%';
+        line.style.width = dist + '%';
+        line.style.transform = `rotate(${Math.atan2(dy, dx)}rad)`;
+        container.appendChild(line);
+      }
+    }
+  }
+}
+generateNodes();
+</script>
+</body>
+</html>

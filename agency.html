@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instinctive Agency — Marketing & Communications | Instinctive, INC.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #080808;
+  --surface: #111111;
+  --surface-2: #1a1a1a;
+  --surface-3: #0e0e0e;
+  --border: #222222;
+  --border-hover: #333333;
+  --text: #f0f0f0;
+  --text-muted: #888888;
+  --text-dim: #555555;
+  --accent: #c8ff00;
+  --accent-dim: rgba(200, 255, 0, 0.08);
+  --accent-glow: rgba(200, 255, 0, 0.15);
+  --white: #ffffff;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent); color: var(--bg); }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+/* ─── CURSOR GLOW ─── */
+.cursor-glow {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle, rgba(200, 255, 0, 0.03) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease-out;
+}
+
+/* ─── NOISE ─── */
+.noise {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0 3rem;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(8, 8, 8, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+nav.scrolled { border-bottom-color: var(--border); }
+
+.nav-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.nav-logo .dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.25s ease;
+}
+.nav-links a:hover { color: var(--white); }
+
+.nav-cta {
+  padding: 0.55rem 1.4rem;
+  background: var(--white);
+  color: var(--bg) !important;
+  border-radius: 100px;
+  font-weight: 600 !important;
+  transition: background 0.25s ease, transform 0.2s ease !important;
+}
+.nav-cta:hover { background: var(--accent) !important; transform: scale(1.03); }
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+.menu-toggle span {
+  width: 24px;
+  height: 2px;
+  background: var(--white);
+  transition: 0.3s ease;
+}
+
+/* ─── BACK LINK ─── */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 2rem;
+  transition: color 0.3s ease;
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards 0.1s;
+}
+.back-link:hover { color: var(--accent); }
+.back-link svg { width: 16px; height: 16px; stroke: currentColor; }
+
+/* ─── HERO ─── */
+.division-hero {
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 3rem 5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.division-hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(200, 255, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200, 255, 0, 0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 70% 60% at 70% 40%, black 10%, transparent 80%);
+}
+
+.division-hero-gradient {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background: radial-gradient(ellipse at 80% 30%, rgba(200, 255, 0, 0.04), transparent 70%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+}
+
+.division-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 1rem 0.45rem 0.55rem;
+  background: var(--accent-dim);
+  border: 1px solid rgba(200, 255, 0, 0.12);
+  border-radius: 100px;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards 0.2s;
+}
+.division-badge-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(200, 255, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.division-badge-icon svg { width: 14px; height: 14px; stroke: var(--accent); }
+.division-badge-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.division-hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2.8rem, 6.5vw, 5.5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--white);
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.35s;
+}
+.division-hero h1 .accent-text { color: var(--accent); }
+.division-hero h1 .outline {
+  -webkit-text-stroke: 1.5px var(--white);
+  color: transparent;
+}
+
+.division-hero-desc {
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  max-width: 550px;
+  line-height: 1.7;
+  margin-top: 1.8rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.5s;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 3rem;
+  margin-top: 3rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.65s;
+}
+.hero-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.hero-meta-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.hero-meta-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── SHARED ─── */
+section { padding: 7rem 3rem; position: relative; }
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  max-width: 700px;
+  line-height: 1.1;
+}
+
+.section-desc {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 560px;
+  margin-top: 1.2rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 3rem;
+  margin-bottom: 4rem;
+}
+.section-header-right {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  max-width: 380px;
+  line-height: 1.65;
+  text-align: right;
+}
+
+/* ─── PHILOSOPHY STRIP ─── */
+.philosophy-strip {
+  padding: 4rem 3rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+.philosophy-quote {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  flex: 1;
+}
+.philosophy-quote span { color: var(--accent); }
+.philosophy-attr {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  min-width: 160px;
+  text-align: right;
+}
+
+/* ─── CAPABILITIES ─── */
+#capabilities { background: var(--bg); }
+
+.capabilities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.capability-card {
+  background: var(--surface);
+  padding: 2.5rem;
+  position: relative;
+  transition: background 0.4s ease;
+  cursor: default;
+}
+.capability-card:hover { background: var(--surface-2); }
+.capability-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 2.5rem;
+  right: 2.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.capability-card:hover::after { opacity: 0.3; }
+
+.capability-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 1.2rem;
+  opacity: 0.5;
+}
+
+.capability-card h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.01em;
+}
+
+.capability-card p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.capability-list {
+  list-style: none;
+  margin-top: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.capability-list li {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.3s ease;
+}
+.capability-card:hover .capability-list li { color: var(--text-muted); }
+.capability-list li::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 50%;
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+/* ─── CASE STUDIES / WORK ─── */
+#work { background: var(--surface-3); border-top: 1px solid var(--border); }
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.work-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: default;
+}
+.work-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-4px);
+}
+
+.work-card-featured {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.work-card-featured .work-visual { min-height: 400px; }
+
+.work-visual {
+  background: var(--surface-2);
+  min-height: 260px;
+  position: relative;
+  overflow: hidden;
+}
+
+.work-visual-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Abstract visual patterns for each case study */
+.visual-pattern {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.visual-pattern-1 {
+  background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface) 100%);
+}
+.visual-pattern-1::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 15%;
+  width: 70%;
+  height: 60%;
+  border: 1px solid rgba(200, 255, 0, 0.08);
+  border-radius: 50%;
+}
+.visual-pattern-1::after {
+  content: '';
+  position: absolute;
+  top: 30%;
+  left: 25%;
+  width: 50%;
+  height: 40%;
+  border: 1px solid rgba(200, 255, 0, 0.12);
+  border-radius: 50%;
+}
+.visual-pattern-1 .vp-accent {
+  position: absolute;
+  top: 38%;
+  left: 35%;
+  width: 30%;
+  height: 24%;
+  background: radial-gradient(circle, rgba(200, 255, 0, 0.06), transparent);
+  border-radius: 50%;
+}
+
+.visual-pattern-2 {
+  background: linear-gradient(180deg, var(--surface-2) 0%, rgba(200, 255, 0, 0.02) 100%);
+}
+.visual-pattern-2::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(rgba(200, 255, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200, 255, 0, 0.04) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+.visual-pattern-2 .vp-bar {
+  position: absolute;
+  bottom: 20%;
+  width: 8%;
+  background: rgba(200, 255, 0, 0.08);
+  border-radius: 4px 4px 0 0;
+}
+.visual-pattern-2 .vp-bar:nth-child(1) { left: 15%; height: 35%; }
+.visual-pattern-2 .vp-bar:nth-child(2) { left: 28%; height: 55%; background: rgba(200, 255, 0, 0.12); }
+.visual-pattern-2 .vp-bar:nth-child(3) { left: 41%; height: 40%; }
+.visual-pattern-2 .vp-bar:nth-child(4) { left: 54%; height: 65%; background: rgba(200, 255, 0, 0.15); }
+.visual-pattern-2 .vp-bar:nth-child(5) { left: 67%; height: 45%; }
+.visual-pattern-2 .vp-bar:nth-child(6) { left: 80%; height: 70%; background: rgba(200, 255, 0, 0.12); }
+
+.visual-pattern-3 {
+  background: var(--surface-2);
+}
+.visual-pattern-3 .vp-line {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200, 255, 0, 0.1), transparent);
+  left: 0;
+  right: 0;
+}
+.visual-pattern-3 .vp-line:nth-child(1) { top: 20%; width: 80%; left: 10%; }
+.visual-pattern-3 .vp-line:nth-child(2) { top: 35%; width: 60%; left: 20%; opacity: 0.7; }
+.visual-pattern-3 .vp-line:nth-child(3) { top: 50%; width: 90%; left: 5%; }
+.visual-pattern-3 .vp-line:nth-child(4) { top: 65%; width: 50%; left: 25%; opacity: 0.5; }
+.visual-pattern-3 .vp-line:nth-child(5) { top: 80%; width: 70%; left: 15%; opacity: 0.8; }
+.visual-pattern-3 .vp-node {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  opacity: 0.3;
+}
+.visual-pattern-3 .vp-node:nth-child(6) { top: 20%; left: 45%; }
+.visual-pattern-3 .vp-node:nth-child(7) { top: 35%; left: 55%; }
+.visual-pattern-3 .vp-node:nth-child(8) { top: 50%; left: 30%; opacity: 0.5; }
+.visual-pattern-3 .vp-node:nth-child(9) { top: 65%; left: 60%; }
+.visual-pattern-3 .vp-node:nth-child(10) { top: 80%; left: 40%; }
+
+.visual-pattern-4 {
+  background: linear-gradient(225deg, var(--surface-2) 0%, var(--surface) 100%);
+}
+.visual-pattern-4::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  border: 1px solid rgba(200, 255, 0, 0.08);
+}
+.visual-pattern-4::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 140px;
+  height: 140px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  border: 1px solid rgba(200, 255, 0, 0.12);
+}
+.visual-pattern-4 .vp-accent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: rgba(200, 255, 0, 0.04);
+}
+
+.work-info {
+  padding: 2rem 2.5rem;
+}
+
+.work-category {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+  opacity: 0.7;
+}
+
+.work-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.6rem;
+}
+
+.work-client {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.work-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
+}
+
+.work-results {
+  display: flex;
+  gap: 2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border);
+}
+.work-result {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.work-result-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+.work-result-label {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ─── CLIENTS ─── */
+#clients { border-top: 1px solid var(--border); }
+
+.clients-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: end;
+  margin-bottom: 4rem;
+}
+
+.clients-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.client-cell {
+  background: var(--surface);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.8rem;
+  min-height: 140px;
+  transition: background 0.3s ease;
+}
+.client-cell:hover { background: var(--surface-2); }
+
+.client-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: -0.02em;
+  transition: color 0.3s ease;
+}
+.client-cell:hover .client-logo { color: var(--white); }
+
+.client-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+/* ─── SERVICES LIST ─── */
+#services { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.services-list {
+  margin-top: 4rem;
+}
+
+.service-row {
+  display: grid;
+  grid-template-columns: 2fr 3fr 1fr;
+  gap: 2rem;
+  align-items: center;
+  padding: 1.8rem 0;
+  border-bottom: 1px solid var(--border);
+  transition: padding-left 0.4s ease;
+  cursor: default;
+}
+.service-row:first-child { border-top: 1px solid var(--border); }
+.service-row:hover { padding-left: 1rem; }
+
+.service-row h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: -0.01em;
+  transition: color 0.3s ease;
+}
+.service-row:hover h4 { color: var(--accent); }
+
+.service-row p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.service-arrow {
+  display: flex;
+  justify-content: flex-end;
+  color: var(--text-dim);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.service-row:hover .service-arrow {
+  color: var(--accent);
+  transform: translateX(4px);
+}
+
+/* ─── CTA ─── */
+.cta-section {
+  padding: 8rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-glow {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200, 255, 0, 0.06), transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.cta-section .section-title {
+  max-width: 550px;
+  margin: 0 auto;
+  text-align: center;
+}
+.cta-section .section-desc {
+  max-width: 440px;
+  margin: 1.2rem auto 0;
+  text-align: center;
+}
+.cta-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── BUTTONS ─── */
+.btn-primary {
+  padding: 0.85rem 2.2rem;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(200, 255, 0, 0.25);
+}
+
+.btn-secondary {
+  padding: 0.85rem 2.2rem;
+  background: transparent;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+.btn-secondary:hover { border-color: var(--text-muted); background: rgba(255,255,255,0.03); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 3rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-left {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.footer-left span { color: var(--text-dim); font-weight: 400; font-size: 0.78rem; }
+.footer-right {
+  display: flex;
+  gap: 2rem;
+}
+.footer-right a {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+.footer-right a:hover { color: var(--accent); }
+
+/* ─── SCROLL REVEAL ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1024px) {
+  .capabilities-grid { grid-template-columns: repeat(2, 1fr); }
+  .work-card-featured { grid-template-columns: 1fr; }
+  .clients-grid { grid-template-columns: repeat(3, 1fr); }
+  .clients-intro { grid-template-columns: 1fr; gap: 1.5rem; }
+  .service-row { grid-template-columns: 1fr 2fr auto; }
+}
+
+@media (max-width: 768px) {
+  nav { padding: 0 1.5rem; }
+  .nav-links { display: none; }
+  .menu-toggle { display: flex; }
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: rgba(8, 8, 8, 0.97);
+    backdrop-filter: blur(20px);
+    padding: 2rem 1.5rem;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  section { padding: 4rem 1.5rem; }
+  .division-hero { padding: 7rem 1.5rem 3rem; min-height: auto; }
+  .capabilities-grid { grid-template-columns: 1fr; }
+  .work-grid { grid-template-columns: 1fr; }
+  .work-card-featured { grid-template-columns: 1fr; }
+  .clients-grid { grid-template-columns: repeat(2, 1fr); }
+  .service-row { grid-template-columns: 1fr; gap: 0.5rem; }
+  .service-arrow { display: none; }
+  .hero-meta { flex-wrap: wrap; gap: 1.5rem; }
+  .philosophy-strip { flex-direction: column; gap: 1.5rem; padding: 3rem 1.5rem; }
+  .philosophy-attr { text-align: left; }
+  .cta-actions { flex-direction: column; align-items: center; }
+  footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+  .footer-right { flex-wrap: wrap; justify-content: center; }
+  .work-results { flex-wrap: wrap; gap: 1.2rem; }
+  .section-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .section-header-right { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ─── NAV ─── -->
+<nav id="nav">
+  <a href="/" class="nav-logo">
+    <span class="dot"></span>
+    INSTINCTIVE
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/#divisions">Divisions</a></li>
+    <li><a href="#capabilities">Capabilities</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#clients">Clients</a></li>
+    <li><a href="#contact" class="nav-cta">Start a Project</a></li>
+  </ul>
+  <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="division-hero">
+  <div class="division-hero-bg"></div>
+  <div class="division-hero-gradient"></div>
+  <div class="hero-content">
+    <a href="/" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      All Divisions
+    </a>
+
+    <div class="division-badge">
+      <div class="division-badge-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <span class="division-badge-text">Marketing &amp; Communications</span>
+    </div>
+
+    <h1>
+      Instinctive<br>
+      <span class="accent-text">Agency</span>
+    </h1>
+
+    <p class="division-hero-desc">
+      Strategic marketing and communications built on research, not hunches. We position brands, architect campaigns, and craft narratives that move markets — all backed by data that makes every dollar accountable.
+    </p>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Focus</span>
+        <span class="hero-meta-value">Brand & Campaign Strategy</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Approach</span>
+        <span class="hero-meta-value">Research-Led, Data-Validated</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Scope</span>
+        <span class="hero-meta-value">Full-Funnel</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PHILOSOPHY STRIP ─── -->
+<div class="philosophy-strip reveal">
+  <div class="philosophy-quote">
+    "The best campaigns don't start with a <span>big idea</span>. They start with a <span>big insight</span> — then the idea becomes inevitable."
+  </div>
+  <div class="philosophy-attr">
+    Instinctive Agency<br>Methodology
+  </div>
+</div>
+
+<!-- ─── CAPABILITIES ─── -->
+<section id="capabilities">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label">01 — Capabilities</div>
+      <h2 class="section-title">What we bring to the table.</h2>
+    </div>
+    <div class="section-header-right">
+      Every engagement starts with research. We don't pitch concepts — we present findings, then build strategy from truth.
+    </div>
+  </div>
+
+  <div class="capabilities-grid reveal">
+    <div class="capability-card">
+      <div class="capability-number">001</div>
+      <h3>Brand Strategy & Positioning</h3>
+      <p>Define who you are, who you're for, and why you matter — grounded in competitive analysis and audience intelligence.</p>
+      <ul class="capability-list">
+        <li>Brand Architecture</li>
+        <li>Competitive Landscape Mapping</li>
+        <li>Audience Segmentation</li>
+        <li>Value Proposition Development</li>
+        <li>Brand Identity Systems</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">002</div>
+      <h3>Campaign Architecture</h3>
+      <p>Integrated campaigns engineered for measurable impact — from concept to execution across every relevant channel.</p>
+      <ul class="capability-list">
+        <li>Go-to-Market Strategy</li>
+        <li>Multi-Channel Campaigns</li>
+        <li>Creative Direction</li>
+        <li>Media Planning & Buying</li>
+        <li>Launch Sequencing</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">003</div>
+      <h3>Public Relations & Comms</h3>
+      <p>Earned media strategy, narrative control, and stakeholder communications that build lasting reputational equity.</p>
+      <ul class="capability-list">
+        <li>Media Relations</li>
+        <li>Press Strategy & Placement</li>
+        <li>Crisis Communications</li>
+        <li>Thought Leadership</li>
+        <li>Investor & Stakeholder Comms</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">004</div>
+      <h3>Market Research & Intelligence</h3>
+      <p>Primary and secondary research that uncovers the insights your strategy is built on — not decorated with.</p>
+      <ul class="capability-list">
+        <li>Consumer Research & Surveys</li>
+        <li>Focus Groups</li>
+        <li>Trend Analysis</li>
+        <li>Market Sizing & Opportunity</li>
+        <li>Brand Perception Studies</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">005</div>
+      <h3>Content & Narrative Strategy</h3>
+      <p>Storytelling frameworks that translate brand positioning into compelling content across every touchpoint.</p>
+      <ul class="capability-list">
+        <li>Messaging Architecture</li>
+        <li>Editorial Strategy</li>
+        <li>Content Calendaring</li>
+        <li>Copywriting & Scripting</li>
+        <li>Brand Voice Development</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">006</div>
+      <h3>Analytics & Performance</h3>
+      <p>Closed-loop reporting that connects every marketing dollar to business outcomes. No vanity metrics.</p>
+      <ul class="capability-list">
+        <li>KPI Framework Design</li>
+        <li>Attribution Modeling</li>
+        <li>Campaign Analytics</li>
+        <li>ROI Reporting</li>
+        <li>Optimization Cycles</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CASE STUDIES ─── -->
+<section id="work">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label">02 — Selected Work</div>
+      <h2 class="section-title">Instinct in action.</h2>
+    </div>
+    <div class="section-header-right">
+      Results from engagements where research-led strategy met decisive execution.
+    </div>
+  </div>
+
+  <div class="work-grid reveal">
+    <!-- Featured Case Study -->
+    <div class="work-card work-card-featured">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern visual-pattern-2">
+            <div class="vp-bar"></div>
+            <div class="vp-bar"></div>
+            <div class="vp-bar"></div>
+            <div class="vp-bar"></div>
+            <div class="vp-bar"></div>
+            <div class="vp-bar"></div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info" style="display:flex;flex-direction:column;justify-content:center;">
+        <div class="work-category">Brand Repositioning + GTM</div>
+        <div class="work-title">Full-Market Rebrand &amp; Launch</div>
+        <div class="work-client">Confidential — B2B SaaS Platform</div>
+        <div class="work-desc">Complete brand repositioning for a Series B enterprise platform entering a crowded vertical. Research-led strategy identified an underserved positioning corridor, informing everything from naming to launch sequencing across 12 channels.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">340%</span>
+            <span class="work-result-label">Qualified Lead Increase</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">2.1x</span>
+            <span class="work-result-label">Pipeline Growth</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">45 Days</span>
+            <span class="work-result-label">To Market</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 2 -->
+    <div class="work-card">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern visual-pattern-1">
+            <div class="vp-accent"></div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">Campaign Strategy</div>
+        <div class="work-title">National Awareness Campaign</div>
+        <div class="work-client">Confidential — Consumer Health Brand</div>
+        <div class="work-desc">Multi-channel campaign anchored in proprietary consumer research. Identified a perception gap and built a 90-day narrative arc that shifted brand association metrics.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">28pt</span>
+            <span class="work-result-label">Awareness Lift</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">4.2x</span>
+            <span class="work-result-label">ROAS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 3 -->
+    <div class="work-card">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern visual-pattern-3">
+            <div class="vp-line"></div>
+            <div class="vp-line"></div>
+            <div class="vp-line"></div>
+            <div class="vp-line"></div>
+            <div class="vp-line"></div>
+            <div class="vp-node"></div>
+            <div class="vp-node"></div>
+            <div class="vp-node"></div>
+            <div class="vp-node"></div>
+            <div class="vp-node"></div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">PR + Crisis Comms</div>
+        <div class="work-title">Reputation Recovery Program</div>
+        <div class="work-client">Confidential — Entertainment / Media</div>
+        <div class="work-desc">Strategic communications program designed to rebuild public trust after a high-profile incident. Controlled the narrative through earned media placement and executive positioning.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">87%</span>
+            <span class="work-result-label">Sentiment Recovery</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">140+</span>
+            <span class="work-result-label">Media Placements</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 4 -->
+    <div class="work-card">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern visual-pattern-4">
+            <div class="vp-accent"></div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">Market Research + Strategy</div>
+        <div class="work-title">New Market Entry Playbook</div>
+        <div class="work-client">Confidential — Fintech Startup</div>
+        <div class="work-desc">Comprehensive market research and GTM strategy for a fintech product entering a regulated vertical. Delivered audience segmentation, messaging architecture, and a phased rollout plan.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">$2.4M</span>
+            <span class="work-result-label">First-Year Revenue</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">3</span>
+            <span class="work-result-label">Markets Launched</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 5 -->
+    <div class="work-card">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern visual-pattern-1">
+            <div class="vp-accent"></div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">Integrated Campaign</div>
+        <div class="work-title">Product Launch — DTC</div>
+        <div class="work-client">Confidential — Lifestyle / CPG Brand</div>
+        <div class="work-desc">End-to-end product launch for a DTC brand — from consumer research and positioning through creative production, influencer strategy, and performance media.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">$850K</span>
+            <span class="work-result-label">Launch Month Revenue</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">12K</span>
+            <span class="work-result-label">Units Sold (Week 1)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CLIENTS ─── -->
+<section id="clients">
+  <div class="clients-intro reveal">
+    <div>
+      <div class="section-label">03 — Clients & Partners</div>
+      <h2 class="section-title">Trusted across industries.</h2>
+    </div>
+    <p class="section-desc" style="margin-top:0;">
+      From venture-backed startups to established enterprise — we partner with teams who value strategy backed by evidence.
+    </p>
+  </div>
+
+  <div class="clients-grid reveal">
+    <div class="client-cell">
+      <div class="client-logo">NovaTech</div>
+      <div class="client-type">Enterprise SaaS</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Meridian Health</div>
+      <div class="client-type">Healthcare</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Arclight</div>
+      <div class="client-type">Entertainment</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Vantage Fintech</div>
+      <div class="client-type">Financial Services</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Clearpath</div>
+      <div class="client-type">Logistics</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Onda</div>
+      <div class="client-type">CPG / Lifestyle</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Vertex Capital</div>
+      <div class="client-type">Venture Capital</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Terraform Labs</div>
+      <div class="client-type">Deep Tech</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Kinetic Sports</div>
+      <div class="client-type">Sports & Fitness</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Primrose</div>
+      <div class="client-type">Beauty / DTC</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Ironclad</div>
+      <div class="client-type">Cybersecurity</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Solstice Media</div>
+      <div class="client-type">Media & Publishing</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SERVICES EXPANDABLE LIST ─── -->
+<section id="services">
+  <div class="reveal">
+    <div class="section-label">04 — Full Service Menu</div>
+    <h2 class="section-title">Everything under one instinct.</h2>
+    <p class="section-desc">Every capability available individually or as part of an integrated engagement.</p>
+  </div>
+
+  <div class="services-list reveal">
+    <div class="service-row">
+      <h4>Brand Strategy</h4>
+      <p>Positioning, architecture, identity systems, naming, competitive differentiation, and audience segmentation.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Campaign Development</h4>
+      <p>Concept ideation, creative direction, multi-channel planning, launch strategy, and performance optimization.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Public Relations</h4>
+      <p>Media relations, press strategy, earned media, crisis comms, executive positioning, and thought leadership.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Market Research</h4>
+      <p>Consumer insights, focus groups, surveys, trend analysis, market sizing, and brand perception studies.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Content & Storytelling</h4>
+      <p>Messaging frameworks, editorial strategy, copywriting, scripting, brand voice, and content calendaring.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Media Planning & Buying</h4>
+      <p>Channel strategy, media mix modeling, programmatic, direct buys, and budget allocation optimization.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Analytics & Attribution</h4>
+      <p>KPI frameworks, closed-loop reporting, attribution modeling, ROI analysis, and optimization cycles.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Stakeholder Communications</h4>
+      <p>Investor relations, board decks, internal comms, change management messaging, and corporate narrative.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section class="cta-section" id="contact">
+  <div class="cta-glow"></div>
+  <div class="reveal">
+    <div class="section-label" style="text-align:center;">Let's Build</div>
+    <h2 class="section-title">Got a market to move?</h2>
+    <p class="section-desc">
+      Tell us where you're headed. We'll show you what the data says — and build the strategy to get you there.
+    </p>
+    <div class="cta-actions">
+      <a href="mailto:agency@instinctive.xyz" class="btn-primary">Start a Conversation</a>
+      <a href="/" class="btn-secondary">All Divisions</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-left">
+    Instinctive, INC. <span>&nbsp;© 2025. All rights reserved.</span>
+  </div>
+  <div class="footer-right">
+    <a href="https://instinctive.xyz" target="_blank">instinctive.xyz</a>
+    <a href="/">Home</a>
+    <a href="/#divisions">Divisions</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+const glow = document.getElementById('cursorGlow');
+document.addEventListener('mousemove', (e) => {
+  glow.style.left = e.clientX + 'px';
+  glow.style.top = e.clientY + 'px';
+});
+
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.getElementById('navLinks');
+menuToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => navLinks.classList.remove('open'));
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>

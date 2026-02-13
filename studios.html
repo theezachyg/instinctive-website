@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instinctive Studios — Audio & Video Production | Instinctive, INC.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #080808;
+  --surface: #111111;
+  --surface-2: #1a1a1a;
+  --surface-3: #0e0e0e;
+  --border: #222222;
+  --border-hover: #333333;
+  --text: #f0f0f0;
+  --text-muted: #888888;
+  --text-dim: #555555;
+  --accent: #c8ff00;
+  --accent-dim: rgba(200, 255, 0, 0.08);
+  --accent-glow: rgba(200, 255, 0, 0.15);
+  --white: #ffffff;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent); color: var(--bg); }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+.cursor-glow {
+  position: fixed; width: 600px; height: 600px; border-radius: 50%;
+  pointer-events: none; z-index: 0;
+  background: radial-gradient(circle, rgba(200, 255, 0, 0.03) 0%, transparent 70%);
+  transform: translate(-50%, -50%); transition: transform 0.1s ease-out;
+}
+
+.noise {
+  position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 0 3rem; height: 72px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(8, 8, 8, 0.8); backdrop-filter: blur(20px);
+  border-bottom: 1px solid transparent; transition: border-color 0.3s ease;
+}
+nav.scrolled { border-bottom-color: var(--border); }
+
+.nav-logo {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.15rem;
+  letter-spacing: -0.03em; color: var(--white); text-decoration: none;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.nav-logo .dot {
+  width: 8px; height: 8px; background: var(--accent); border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  font-size: 0.82rem; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase;
+  transition: color 0.25s ease;
+}
+.nav-links a:hover { color: var(--white); }
+
+.nav-cta {
+  padding: 0.55rem 1.4rem; background: var(--white); color: var(--bg) !important;
+  border-radius: 100px; font-weight: 600 !important;
+  transition: background 0.25s ease, transform 0.2s ease !important;
+}
+.nav-cta:hover { background: var(--accent) !important; transform: scale(1.03); }
+
+.menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+.menu-toggle span { width: 24px; height: 2px; background: var(--white); transition: 0.3s ease; }
+
+/* ─── BACK LINK ─── */
+.back-link {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.78rem; font-weight: 500; color: var(--text-dim);
+  text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 2rem; transition: color 0.3s ease;
+  opacity: 0; animation: fadeUp 0.6s ease forwards 0.1s;
+}
+.back-link:hover { color: var(--accent); }
+.back-link svg { width: 16px; height: 16px; stroke: currentColor; }
+
+/* ─── HERO ─── */
+.division-hero {
+  min-height: 85vh; display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 0 3rem 5rem; position: relative; overflow: hidden;
+}
+
+.division-hero-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(200, 255, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200, 255, 0, 0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 70% 60% at 70% 40%, black 10%, transparent 80%);
+}
+
+.division-hero-gradient {
+  position: absolute; top: 0; right: 0; width: 50%; height: 100%;
+  background: radial-gradient(ellipse at 80% 30%, rgba(200, 255, 0, 0.04), transparent 70%);
+  pointer-events: none;
+}
+
+/* Film strip decoration */
+.hero-filmstrip {
+  position: absolute; right: 3rem; top: 50%; transform: translateY(-50%);
+  width: 120px; opacity: 0.04;
+}
+.filmstrip-hole {
+  width: 14px; height: 10px; border: 1px solid var(--white);
+  border-radius: 2px; margin: 6px 0;
+}
+.filmstrip-col {
+  display: flex; flex-direction: column; align-items: center;
+}
+.filmstrip-frame {
+  width: 80px; height: 50px; border: 1px solid var(--white);
+  margin: 4px 20px; border-radius: 1px;
+}
+
+.hero-content { position: relative; z-index: 2; max-width: 800px; }
+
+.division-badge {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  padding: 0.45rem 1rem 0.45rem 0.55rem;
+  background: var(--accent-dim); border: 1px solid rgba(200, 255, 0, 0.12);
+  border-radius: 100px; margin-bottom: 2rem;
+  opacity: 0; animation: fadeUp 0.6s ease forwards 0.2s;
+}
+.division-badge-icon {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(200, 255, 0, 0.12);
+  display: flex; align-items: center; justify-content: center;
+}
+.division-badge-icon svg { width: 14px; height: 14px; stroke: var(--accent); }
+.division-badge-text {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500;
+  color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
+}
+
+.division-hero h1 {
+  font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.8rem, 6.5vw, 5.5rem);
+  font-weight: 700; line-height: 0.95; letter-spacing: -0.04em; color: var(--white);
+  opacity: 0; animation: fadeUp 0.8s ease forwards 0.35s;
+}
+.division-hero h1 .accent-text { color: var(--accent); }
+
+.division-hero-desc {
+  font-size: 1.15rem; font-weight: 400; color: var(--text-muted);
+  max-width: 550px; line-height: 1.7; margin-top: 1.8rem;
+  opacity: 0; animation: fadeUp 0.8s ease forwards 0.5s;
+}
+
+.hero-meta {
+  display: flex; gap: 3rem; margin-top: 3rem;
+  opacity: 0; animation: fadeUp 0.8s ease forwards 0.65s;
+}
+.hero-meta-item { display: flex; flex-direction: column; gap: 0.2rem; }
+.hero-meta-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+  color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase;
+}
+.hero-meta-value {
+  font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem;
+  font-weight: 600; color: var(--white);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── SHARED ─── */
+section { padding: 7rem 3rem; position: relative; }
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500;
+  color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem;
+}
+.section-title {
+  font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700; letter-spacing: -0.03em; color: var(--white);
+  max-width: 700px; line-height: 1.1;
+}
+.section-desc {
+  color: var(--text-muted); font-size: 1.05rem; line-height: 1.7;
+  max-width: 560px; margin-top: 1.2rem;
+}
+.section-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 3rem; margin-bottom: 4rem;
+}
+.section-header-right {
+  font-size: 0.88rem; color: var(--text-muted); max-width: 380px;
+  line-height: 1.65; text-align: right;
+}
+
+/* ─── PHILOSOPHY STRIP ─── */
+.philosophy-strip {
+  padding: 4rem 3rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 4rem;
+}
+.philosophy-quote {
+  font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 600; color: var(--white); line-height: 1.35;
+  letter-spacing: -0.02em; flex: 1;
+}
+.philosophy-quote span { color: var(--accent); }
+.philosophy-attr {
+  font-size: 0.78rem; color: var(--text-dim); text-transform: uppercase;
+  letter-spacing: 0.1em; min-width: 160px; text-align: right;
+}
+
+/* ─── CAPABILITIES ─── */
+#capabilities { background: var(--bg); }
+
+.capabilities-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: var(--border); border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+}
+
+.capability-card {
+  background: var(--surface); padding: 2.5rem; position: relative;
+  transition: background 0.4s ease; cursor: default;
+}
+.capability-card:hover { background: var(--surface-2); }
+.capability-card::after {
+  content: ''; position: absolute; bottom: 0; left: 2.5rem; right: 2.5rem;
+  height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0; transition: opacity 0.4s ease;
+}
+.capability-card:hover::after { opacity: 0.3; }
+
+.capability-number {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+  color: var(--accent); letter-spacing: 0.1em; margin-bottom: 1.2rem; opacity: 0.5;
+}
+.capability-card h3 {
+  font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 600;
+  color: var(--white); margin-bottom: 0.8rem; letter-spacing: -0.01em;
+}
+.capability-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.65; }
+
+.capability-list {
+  list-style: none; margin-top: 1.2rem; display: flex; flex-direction: column; gap: 0.4rem;
+}
+.capability-list li {
+  font-size: 0.78rem; color: var(--text-dim); display: flex; align-items: center;
+  gap: 0.5rem; transition: color 0.3s ease;
+}
+.capability-card:hover .capability-list li { color: var(--text-muted); }
+.capability-list li::before {
+  content: ''; width: 4px; height: 4px; background: var(--accent);
+  border-radius: 50%; opacity: 0.4; flex-shrink: 0;
+}
+
+/* ─── SHOWREEL / FEATURED ─── */
+.showreel-section {
+  padding: 5rem 3rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-3);
+}
+
+.showreel-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/7;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: 3rem;
+}
+
+.showreel-visual {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 50%, rgba(200, 255, 0, 0.02) 100%);
+}
+
+/* Waveform decoration */
+.showreel-waveform {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  padding: 0 10%;
+  opacity: 0.06;
+}
+.wave-bar {
+  width: 3px;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
+  flex-shrink: 0;
+}
+
+.showreel-play {
+  position: relative;
+  z-index: 2;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.showreel-container:hover .showreel-play {
+  transform: scale(1.1);
+  box-shadow: 0 0 60px rgba(200, 255, 0, 0.3);
+}
+.showreel-play svg { width: 28px; height: 28px; fill: var(--bg); margin-left: 3px; }
+
+.showreel-label {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.showreel-label-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.showreel-label-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+/* ─── WORK GRID ─── */
+#work { background: var(--surface-3); border-top: 1px solid var(--border); }
+
+.work-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem;
+}
+
+.work-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  overflow: hidden; transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: default;
+}
+.work-card:hover { border-color: var(--border-hover); transform: translateY(-4px); }
+
+.work-card-featured {
+  grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr;
+}
+.work-card-featured .work-visual { min-height: 400px; }
+
+.work-visual {
+  background: var(--surface-2); min-height: 260px; position: relative; overflow: hidden;
+}
+.work-visual-inner {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+}
+
+/* Visual patterns */
+.visual-pattern { width: 100%; height: 100%; position: relative; overflow: hidden; }
+
+.vp-clapboard {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 120px; height: 90px; border: 1px solid rgba(200, 255, 0, 0.1);
+  border-radius: 4px;
+}
+.vp-clapboard::before {
+  content: ''; position: absolute; top: -20px; left: 0; right: 0; height: 20px;
+  border: 1px solid rgba(200, 255, 0, 0.1); border-bottom: none;
+  background: repeating-linear-gradient(135deg, transparent, transparent 8px, rgba(200, 255, 0, 0.04) 8px, rgba(200, 255, 0, 0.04) 16px);
+}
+.vp-clapboard::after {
+  content: ''; position: absolute; top: 30%; left: 15%; right: 15%;
+  height: 1px; background: rgba(200, 255, 0, 0.06);
+  box-shadow: 0 12px 0 rgba(200, 255, 0, 0.06), 0 24px 0 rgba(200, 255, 0, 0.06);
+}
+
+.vp-waveform {
+  position: absolute; bottom: 25%; left: 10%; right: 10%;
+  height: 50%; display: flex; align-items: flex-end; gap: 2px; justify-content: center;
+}
+.vp-waveform .wv-bar {
+  width: 2px; background: rgba(200, 255, 0, 0.08); border-radius: 1px 1px 0 0; flex-shrink: 0;
+}
+
+.vp-lens {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 140px; height: 140px; border-radius: 50%;
+  border: 1px solid rgba(200, 255, 0, 0.06);
+}
+.vp-lens::before {
+  content: ''; position: absolute; top: 20px; left: 20px; right: 20px; bottom: 20px;
+  border-radius: 50%; border: 1px solid rgba(200, 255, 0, 0.1);
+}
+.vp-lens::after {
+  content: ''; position: absolute; top: 40px; left: 40px; right: 40px; bottom: 40px;
+  border-radius: 50%; background: radial-gradient(circle, rgba(200, 255, 0, 0.06), transparent);
+}
+
+.vp-timeline {
+  position: absolute; top: 50%; left: 8%; right: 8%; height: 1px;
+  background: rgba(200, 255, 0, 0.06);
+}
+.vp-timeline-node {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 8px; height: 8px; border-radius: 50%;
+  border: 1px solid rgba(200, 255, 0, 0.12); background: rgba(200, 255, 0, 0.03);
+}
+.vp-timeline-block {
+  position: absolute; top: -12px; height: 24px;
+  background: rgba(200, 255, 0, 0.04); border: 1px solid rgba(200, 255, 0, 0.06);
+  border-radius: 3px;
+}
+
+.work-info { padding: 2rem 2.5rem; }
+.work-category {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--accent);
+  letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.6rem; opacity: 0.7;
+}
+.work-title {
+  font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 700;
+  color: var(--white); letter-spacing: -0.02em; margin-bottom: 0.6rem;
+}
+.work-client { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem; }
+.work-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 1.5rem; }
+
+.work-results {
+  display: flex; gap: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--border);
+}
+.work-result { display: flex; flex-direction: column; gap: 0.15rem; }
+.work-result-value {
+  font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700;
+  color: var(--accent); letter-spacing: -0.02em;
+}
+.work-result-label {
+  font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em;
+}
+
+/* ─── GEAR / SPECS ─── */
+.gear-section {
+  padding: 5rem 3rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.gear-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.gear-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: border-color 0.3s ease;
+}
+.gear-card:hover { border-color: var(--border-hover); }
+
+.gear-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(200, 255, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+}
+.gear-card-icon svg { width: 18px; height: 18px; stroke: var(--accent); }
+
+.gear-card h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.8rem;
+}
+
+.gear-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.gear-list li {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.gear-list li::before {
+  content: '';
+  width: 3px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 50%;
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+/* ─── CLIENTS ─── */
+#clients { border-top: 1px solid var(--border); }
+
+.clients-intro {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+  align-items: end; margin-bottom: 4rem;
+}
+
+.clients-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: var(--border); border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+}
+
+.client-cell {
+  background: var(--surface); padding: 2.5rem 2rem;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center; gap: 0.8rem;
+  min-height: 140px; transition: background 0.3s ease;
+}
+.client-cell:hover { background: var(--surface-2); }
+
+.client-logo {
+  font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem;
+  font-weight: 700; color: var(--text-dim); letter-spacing: -0.02em;
+  transition: color 0.3s ease;
+}
+.client-cell:hover .client-logo { color: var(--white); }
+
+.client-type {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+  color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.6;
+}
+
+/* ─── SERVICES LIST ─── */
+#services { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.services-list { margin-top: 4rem; }
+
+.service-row {
+  display: grid; grid-template-columns: 2fr 3fr 1fr; gap: 2rem;
+  align-items: center; padding: 1.8rem 0; border-bottom: 1px solid var(--border);
+  transition: padding-left 0.4s ease; cursor: default;
+}
+.service-row:first-child { border-top: 1px solid var(--border); }
+.service-row:hover { padding-left: 1rem; }
+
+.service-row h4 {
+  font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 600;
+  color: var(--white); letter-spacing: -0.01em; transition: color 0.3s ease;
+}
+.service-row:hover h4 { color: var(--accent); }
+.service-row p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+
+.service-arrow {
+  display: flex; justify-content: flex-end; color: var(--text-dim);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.service-row:hover .service-arrow { color: var(--accent); transform: translateX(4px); }
+
+/* ─── BUTTONS ─── */
+.btn-primary {
+  padding: 0.85rem 2.2rem; background: var(--accent); color: var(--bg);
+  font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.85rem;
+  letter-spacing: 0.04em; text-transform: uppercase; border: none;
+  border-radius: 100px; cursor: pointer; text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200, 255, 0, 0.25); }
+
+.btn-secondary {
+  padding: 0.85rem 2.2rem; background: transparent; color: var(--text);
+  font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.85rem;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  border: 1px solid var(--border); border-radius: 100px; cursor: pointer;
+  text-decoration: none; transition: border-color 0.3s ease, background 0.3s ease;
+}
+.btn-secondary:hover { border-color: var(--text-muted); background: rgba(255,255,255,0.03); }
+
+/* ─── CTA ─── */
+.cta-section {
+  padding: 8rem 3rem; text-align: center; position: relative; overflow: hidden;
+}
+.cta-glow {
+  position: absolute; width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200, 255, 0, 0.06), transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+}
+.cta-section .section-title { max-width: 550px; margin: 0 auto; text-align: center; }
+.cta-section .section-desc { max-width: 440px; margin: 1.2rem auto 0; text-align: center; }
+.cta-actions {
+  display: flex; justify-content: center; gap: 1rem;
+  margin-top: 2.5rem; position: relative; z-index: 1;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 3rem; border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-left {
+  font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem;
+  font-weight: 600; color: var(--text-muted);
+}
+.footer-left span { color: var(--text-dim); font-weight: 400; font-size: 0.78rem; }
+.footer-right { display: flex; gap: 2rem; }
+.footer-right a {
+  font-size: 0.78rem; color: var(--text-dim); text-decoration: none;
+  text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500;
+  transition: color 0.3s ease;
+}
+.footer-right a:hover { color: var(--accent); }
+
+/* ─── SCROLL REVEAL ─── */
+.reveal {
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1024px) {
+  .capabilities-grid { grid-template-columns: repeat(2, 1fr); }
+  .work-card-featured { grid-template-columns: 1fr; }
+  .clients-grid { grid-template-columns: repeat(3, 1fr); }
+  .clients-intro { grid-template-columns: 1fr; gap: 1.5rem; }
+  .gear-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  nav { padding: 0 1.5rem; }
+  .nav-links { display: none; }
+  .menu-toggle { display: flex; }
+  .nav-links.open {
+    display: flex; flex-direction: column; position: absolute;
+    top: 72px; left: 0; right: 0; background: rgba(8, 8, 8, 0.97);
+    backdrop-filter: blur(20px); padding: 2rem 1.5rem; gap: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  section { padding: 4rem 1.5rem; }
+  .division-hero { padding: 7rem 1.5rem 3rem; min-height: auto; }
+  .capabilities-grid { grid-template-columns: 1fr; }
+  .work-grid { grid-template-columns: 1fr; }
+  .work-card-featured { grid-template-columns: 1fr; }
+  .clients-grid { grid-template-columns: repeat(2, 1fr); }
+  .service-row { grid-template-columns: 1fr; gap: 0.5rem; }
+  .service-arrow { display: none; }
+  .hero-meta { flex-wrap: wrap; gap: 1.5rem; }
+  .philosophy-strip { flex-direction: column; gap: 1.5rem; padding: 3rem 1.5rem; }
+  .philosophy-attr { text-align: left; }
+  .cta-actions { flex-direction: column; align-items: center; }
+  footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+  .footer-right { flex-wrap: wrap; justify-content: center; }
+  .work-results { flex-wrap: wrap; gap: 1.2rem; }
+  .section-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .section-header-right { text-align: left; }
+  .gear-grid { grid-template-columns: 1fr; }
+  .showreel-section { padding: 3rem 1.5rem; }
+  .showreel-container { aspect-ratio: 16/9; }
+  .hero-filmstrip { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ─── NAV ─── -->
+<nav id="nav">
+  <a href="/" class="nav-logo">
+    <span class="dot"></span>
+    INSTINCTIVE
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/#divisions">Divisions</a></li>
+    <li><a href="#capabilities">Capabilities</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#clients">Clients</a></li>
+    <li><a href="#contact" class="nav-cta">Book a Session</a></li>
+  </ul>
+  <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="division-hero">
+  <div class="division-hero-bg"></div>
+  <div class="division-hero-gradient"></div>
+  <div class="hero-content">
+    <a href="/" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      All Divisions
+    </a>
+
+    <div class="division-badge">
+      <div class="division-badge-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      </div>
+      <span class="division-badge-text">Audio &amp; Video Production</span>
+    </div>
+
+    <h1>
+      Instinctive<br>
+      <span class="accent-text">Studios</span>
+    </h1>
+
+    <p class="division-hero-desc">
+      Full-service audio and video production — from concept through final delivery. Cinematic visuals, immersive audio, and post-production craft built for brands that refuse to blend in.
+    </p>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Focus</span>
+        <span class="hero-meta-value">Film, Audio & Post</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Formats</span>
+        <span class="hero-meta-value">Commercial — Docu — Narrative</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Delivery</span>
+        <span class="hero-meta-value">Broadcast & Digital</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PHILOSOPHY ─── -->
+<div class="philosophy-strip reveal">
+  <div class="philosophy-quote">
+    "Production isn't about gear — it's about <span>vision</span>. The camera is just <span>proof</span> that the idea was worth making."
+  </div>
+  <div class="philosophy-attr">
+    Instinctive Studios<br>Production Philosophy
+  </div>
+</div>
+
+<!-- ─── SHOWREEL ─── -->
+<div class="showreel-section">
+  <div class="reveal">
+    <div class="section-label">Showreel</div>
+    <h2 class="section-title">See the work in motion.</h2>
+  </div>
+  <div class="showreel-container reveal">
+    <div class="showreel-visual">
+      <div class="showreel-waveform" id="waveform"></div>
+    </div>
+    <div class="showreel-play">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    </div>
+    <div class="showreel-label">
+      <span class="showreel-label-tag">2025 Reel</span>
+      <span class="showreel-label-title">Selected Works — Instinctive Studios</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── CAPABILITIES ─── -->
+<section id="capabilities">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label">01 — Capabilities</div>
+      <h2 class="section-title">From script to screen.</h2>
+    </div>
+    <div class="section-header-right">
+      Every frame is intentional. Every cut is earned. We approach production the same way we approach strategy — with research, precision, and instinct.
+    </div>
+  </div>
+
+  <div class="capabilities-grid reveal">
+    <div class="capability-card">
+      <div class="capability-number">001</div>
+      <h3>Video Production</h3>
+      <p>End-to-end video creation — from creative brief and storyboarding through principal photography and final delivery.</p>
+      <ul class="capability-list">
+        <li>Brand Films & Commercials</li>
+        <li>Product Videos</li>
+        <li>Testimonials & Case Studies</li>
+        <li>Social Content Packages</li>
+        <li>Sizzle Reels & Hype Videos</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">002</div>
+      <h3>Documentary & Narrative</h3>
+      <p>Long-form storytelling for brands, organizations, and independent projects that demand depth and craft.</p>
+      <ul class="capability-list">
+        <li>Documentary Films</li>
+        <li>Branded Docuseries</li>
+        <li>Short Films</li>
+        <li>Mini-Docs & Profiles</li>
+        <li>Interview-Driven Content</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">003</div>
+      <h3>Audio Production</h3>
+      <p>Broadcast-grade audio — recording, mixing, and mastering for music, podcasts, voiceover, and immersive experiences.</p>
+      <ul class="capability-list">
+        <li>Music Production & Recording</li>
+        <li>Podcast Production</li>
+        <li>Voiceover & ADR</li>
+        <li>Sound Design</li>
+        <li>Mixing & Mastering</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">004</div>
+      <h3>Post-Production</h3>
+      <p>Where raw footage becomes a finished story. Editorial, color, VFX, and sound — all under one roof.</p>
+      <ul class="capability-list">
+        <li>Editorial & Assembly</li>
+        <li>Color Grading & Correction</li>
+        <li>Visual Effects & Compositing</li>
+        <li>Motion Graphics & Titles</li>
+        <li>Audio Post & Sweetening</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">005</div>
+      <h3>Creative Development</h3>
+      <p>The thinking before the shoot. Concept, script, storyboard, and pre-visualization that ensures every dollar hits the screen.</p>
+      <ul class="capability-list">
+        <li>Concept Development</li>
+        <li>Scriptwriting</li>
+        <li>Storyboarding & Shotlists</li>
+        <li>Casting & Talent Direction</li>
+        <li>Location Scouting</li>
+      </ul>
+    </div>
+
+    <div class="capability-card">
+      <div class="capability-number">006</div>
+      <h3>Live & Multi-Cam</h3>
+      <p>Multi-camera production for live events, concerts, conferences, and broadcast — with real-time switching and streaming.</p>
+      <ul class="capability-list">
+        <li>Live Event Coverage</li>
+        <li>Multi-Cam Switching</li>
+        <li>Live Streaming (RTMP / HLS)</li>
+        <li>Concert & Performance Capture</li>
+        <li>Webinars & Virtual Events</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SELECTED WORK ─── -->
+<section id="work">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label">02 — Selected Work</div>
+      <h2 class="section-title">Frames that earned their place.</h2>
+    </div>
+    <div class="section-header-right">
+      A sampling of projects across commercial, documentary, music, and branded content.
+    </div>
+  </div>
+
+  <div class="work-grid reveal">
+    <!-- Featured -->
+    <div class="work-card work-card-featured">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern" style="background: linear-gradient(135deg, var(--surface-2), var(--surface));">
+            <div class="vp-lens"></div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info" style="display:flex;flex-direction:column;justify-content:center;">
+        <div class="work-category">Brand Film</div>
+        <div class="work-title">Origin Story — Brand Anthem</div>
+        <div class="work-client">Confidential — DTC Lifestyle Brand</div>
+        <div class="work-desc">A 3-minute cinematic brand film shot across four locations in six days. Concept, crew, post — all handled in-house. Designed for broadcast, optimized for social cut-downs.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">14M</span>
+            <span class="work-result-label">Total Views</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">4 Locations</span>
+            <span class="work-result-label">6-Day Shoot</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">22</span>
+            <span class="work-result-label">Deliverables</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 2 -->
+    <div class="work-card">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern" style="background: var(--surface-2);">
+            <div class="vp-waveform" id="cardWave1"></div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">Podcast + Audio</div>
+        <div class="work-title">Flagship Podcast Launch</div>
+        <div class="work-client">Confidential — Media & Entertainment</div>
+        <div class="work-desc">Full podcast production — from format development and studio builds through recording, editing, mixing, and distribution strategy. 40-episode first season.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">2.1M</span>
+            <span class="work-result-label">Downloads (S1)</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">Top 50</span>
+            <span class="work-result-label">Apple Podcasts</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 3 -->
+    <div class="work-card">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern" style="background: linear-gradient(180deg, var(--surface-2), var(--surface));">
+            <div class="vp-clapboard"></div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">Documentary</div>
+        <div class="work-title">Community Resilience — Short Doc</div>
+        <div class="work-client">Confidential — Nonprofit / Foundation</div>
+        <div class="work-desc">A 22-minute documentary following three communities rebuilding after natural disaster. Shot over eight weeks on location with a four-person crew.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">3</span>
+            <span class="work-result-label">Festival Selections</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">$1.2M</span>
+            <span class="work-result-label">Fundraising Impact</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 4 -->
+    <div class="work-card">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern" style="background: var(--surface-2);">
+            <div class="vp-timeline">
+              <div class="vp-timeline-node" style="left: 10%;"></div>
+              <div class="vp-timeline-node" style="left: 35%;"></div>
+              <div class="vp-timeline-node" style="left: 60%;"></div>
+              <div class="vp-timeline-node" style="left: 85%;"></div>
+              <div class="vp-timeline-block" style="left: 12%; width: 20%;"></div>
+              <div class="vp-timeline-block" style="left: 40%; width: 15%;"></div>
+              <div class="vp-timeline-block" style="left: 62%; width: 22%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">Commercial Campaign</div>
+        <div class="work-title">Product Launch — Multi-Spot Series</div>
+        <div class="work-client">Confidential — Consumer Electronics</div>
+        <div class="work-desc">Six-spot commercial series for a product launch — 60s hero, 30s broadcast, and four 15s social cutdowns. Delivered broadcast-ready and platform-optimized.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">6</span>
+            <span class="work-result-label">Spots Delivered</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">48 hrs</span>
+            <span class="work-result-label">Post Turnaround</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 5 -->
+    <div class="work-card">
+      <div class="work-visual">
+        <div class="work-visual-inner">
+          <div class="visual-pattern" style="background: linear-gradient(225deg, var(--surface-2), rgba(200,255,0,0.02));">
+            <div class="vp-lens"></div>
+          </div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">Music Video</div>
+        <div class="work-title">Visual Album — 4 Tracks</div>
+        <div class="work-client">Confidential — Recording Artist</div>
+        <div class="work-desc">Four interconnected music videos shot as a visual album. Each video a distinct visual world, unified by a consistent narrative thread and color language.</div>
+        <div class="work-results">
+          <div class="work-result">
+            <span class="work-result-value">8.5M</span>
+            <span class="work-result-label">Combined Views</span>
+          </div>
+          <div class="work-result">
+            <span class="work-result-value">4</span>
+            <span class="work-result-label">Videos Delivered</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── GEAR & SPECS ─── -->
+<div class="gear-section">
+  <div class="reveal">
+    <div class="section-label">03 — Studio & Gear</div>
+    <h2 class="section-title">Built for broadcast-grade output.</h2>
+    <p class="section-desc">Our facility and gear list are designed for flexibility — from single-camera interviews to multi-location productions.</p>
+  </div>
+
+  <div class="gear-grid reveal">
+    <div class="gear-card">
+      <div class="gear-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      </div>
+      <h4>Camera Systems</h4>
+      <ul class="gear-list">
+        <li>RED V-Raptor XL</li>
+        <li>ARRI ALEXA Mini LF</li>
+        <li>Sony FX6 / FX9</li>
+        <li>Blackmagic URSA 12K</li>
+        <li>DJI Inspire 3 (Aerial)</li>
+      </ul>
+    </div>
+
+    <div class="gear-card">
+      <div class="gear-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </div>
+      <h4>Audio Systems</h4>
+      <ul class="gear-list">
+        <li>Neumann U87 / TLM 103</li>
+        <li>Sennheiser MKH 416</li>
+        <li>Sound Devices MixPre / 888</li>
+        <li>Avid Pro Tools HDX</li>
+        <li>Genelec Monitoring</li>
+      </ul>
+    </div>
+
+    <div class="gear-card">
+      <div class="gear-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+      <h4>Lighting & Grip</h4>
+      <ul class="gear-list">
+        <li>ARRI SkyPanel S60 / S360</li>
+        <li>Aputure 600d Pro</li>
+        <li>Litepanels Gemini 2x1</li>
+        <li>Full Grip & Electric Package</li>
+        <li>Green Screen / Cyclorama</li>
+      </ul>
+    </div>
+
+    <div class="gear-card">
+      <div class="gear-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <h4>Post & Editorial</h4>
+      <ul class="gear-list">
+        <li>DaVinci Resolve Studio</li>
+        <li>Adobe Premiere / After Effects</li>
+        <li>Avid Media Composer</li>
+        <li>Flame (VFX / Compositing)</li>
+        <li>High-Speed SAN Storage</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ─── CLIENTS ─── -->
+<section id="clients">
+  <div class="clients-intro reveal">
+    <div>
+      <div class="section-label">04 — Clients & Partners</div>
+      <h2 class="section-title">Trusted behind the lens.</h2>
+    </div>
+    <p class="section-desc" style="margin-top:0;">
+      From independent artists to enterprise brands — we bring the same craft, rigor, and instinct to every production.
+    </p>
+  </div>
+
+  <div class="clients-grid reveal">
+    <div class="client-cell">
+      <div class="client-logo">Arclight</div>
+      <div class="client-type">Entertainment</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Drift Records</div>
+      <div class="client-type">Music Label</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Onda</div>
+      <div class="client-type">CPG / Lifestyle</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Kinetic Sports</div>
+      <div class="client-type">Sports & Fitness</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">NovaTech</div>
+      <div class="client-type">Enterprise SaaS</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Halcyon Foundation</div>
+      <div class="client-type">Nonprofit</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Vertex Capital</div>
+      <div class="client-type">Venture Capital</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Solstice Media</div>
+      <div class="client-type">Media & Publishing</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Clearpath</div>
+      <div class="client-type">Logistics</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Primrose</div>
+      <div class="client-type">Beauty / DTC</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Meridian Health</div>
+      <div class="client-type">Healthcare</div>
+    </div>
+    <div class="client-cell">
+      <div class="client-logo">Terraform Labs</div>
+      <div class="client-type">Deep Tech</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SERVICES LIST ─── -->
+<section id="services">
+  <div class="reveal">
+    <div class="section-label">05 — Full Production Menu</div>
+    <h2 class="section-title">Every stage, covered.</h2>
+    <p class="section-desc">Available as standalone services or as part of a full production engagement.</p>
+  </div>
+
+  <div class="services-list reveal">
+    <div class="service-row">
+      <h4>Pre-Production</h4>
+      <p>Concept development, scripting, storyboarding, casting, location scouting, budgeting, and production planning.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Principal Photography</h4>
+      <p>Single and multi-camera shoots, aerial, underwater, studio, and on-location — fully crewed and equipped.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Audio Recording & Production</h4>
+      <p>Studio recording, field recording, podcast production, voiceover, ADR, foley, and sound design.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Editorial & Post</h4>
+      <p>Offline / online editing, rough cuts through final, versioning for multiple platforms and aspect ratios.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Color & Finishing</h4>
+      <p>Color grading, color correction, HDR/SDR mastering, and deliverable encoding for broadcast and digital.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Motion & VFX</h4>
+      <p>Motion graphics, title design, visual effects, compositing, 3D integration, and animated explainers.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Live Production & Streaming</h4>
+      <p>Multi-cam live switching, RTMP/HLS streaming, virtual events, concert capture, and real-time graphics.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+    <div class="service-row">
+      <h4>Music Production & Scoring</h4>
+      <p>Original music, scoring, arrangement, session musicians, mixing, and mastering for any medium.</p>
+      <div class="service-arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section class="cta-section" id="contact">
+  <div class="cta-glow"></div>
+  <div class="reveal">
+    <div class="section-label" style="text-align:center;">Let's Create</div>
+    <h2 class="section-title">Got a story worth telling?</h2>
+    <p class="section-desc">
+      Bring us the vision. We'll bring the crew, the cameras, and the craft to make it real.
+    </p>
+    <div class="cta-actions">
+      <a href="mailto:studios@instinctive.xyz" class="btn-primary">Book a Session</a>
+      <a href="/" class="btn-secondary">All Divisions</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-left">
+    Instinctive, INC. <span>&nbsp;© 2025. All rights reserved.</span>
+  </div>
+  <div class="footer-right">
+    <a href="https://instinctive.xyz" target="_blank">instinctive.xyz</a>
+    <a href="/">Home</a>
+    <a href="/#divisions">Divisions</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+const glow = document.getElementById('cursorGlow');
+document.addEventListener('mousemove', (e) => {
+  glow.style.left = e.clientX + 'px';
+  glow.style.top = e.clientY + 'px';
+});
+
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
+
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.getElementById('navLinks');
+menuToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => navLinks.classList.remove('open'));
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// Generate waveform bars
+function generateWaveform(containerId, count) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  for (let i = 0; i < count; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'wave-bar';
+    const h = Math.random() * 80 + 10;
+    bar.style.height = h + '%';
+    bar.style.opacity = (0.3 + Math.random() * 0.7);
+    container.appendChild(bar);
+  }
+}
+generateWaveform('waveform', 120);
+
+// Generate card waveforms
+function generateCardWave(containerId, count) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  for (let i = 0; i < count; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'wv-bar';
+    bar.style.height = (Math.random() * 70 + 10) + '%';
+    bar.style.opacity = (0.3 + Math.random() * 0.7);
+    container.appendChild(bar);
+  }
+}
+generateCardWave('cardWave1', 80);
+</script>
+</body>
+</html>
