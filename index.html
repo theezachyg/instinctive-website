@@ -381,13 +381,15 @@ section { padding: 7rem 3rem; position: relative; }
   background: var(--surface);
   padding: 2.5rem;
   position: relative;
-  transition: background 0.4s ease;
-  cursor: default;
+  transition: background 0.4s ease, transform 0.3s ease;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   min-height: 260px;
+  text-decoration: none;
+  color: inherit;
 }
-.division-card:hover { background: var(--surface-2); }
+.division-card:hover { background: var(--surface-2); transform: translateY(-2px); }
 
 .division-card::before {
   content: '';
@@ -462,6 +464,32 @@ section { padding: 7rem 3rem; position: relative; }
 .division-card:hover .division-tag {
   border-color: var(--border-hover);
   color: var(--text-muted);
+}
+
+.division-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: color 0.3s ease, gap 0.3s ease;
+}
+.division-link svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--text-muted);
+  transition: stroke 0.3s ease;
+}
+.division-card:hover .division-link {
+  color: var(--accent);
+  gap: 0.75rem;
+}
+.division-card:hover .division-link svg {
+  stroke: var(--accent);
 }
 
 /* ─── ABOUT / PHILOSOPHY ─── */
@@ -866,7 +894,7 @@ footer {
 
   <div class="divisions-grid reveal">
     <!-- Agency -->
-    <div class="division-card">
+    <a href="agency.html" class="division-card">
       <div class="division-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
       <div class="division-name">Instinctive Agency</div>
       <div class="division-desc">Full-spectrum marketing and communications strategy — brand positioning, PR, campaign architecture, and integrated media planning. All backed by research.</div>
@@ -875,9 +903,13 @@ footer {
         <span class="division-tag">PR</span>
         <span class="division-tag">Campaigns</span>
       </div>
-    </div>
+      <div class="division-link">
+        View Division
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
     <!-- Studios -->
-    <div class="division-card">
+    <a href="studios.html" class="division-card">
       <div class="division-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div>
       <div class="division-name">Instinctive Studios</div>
       <div class="division-desc">Cinematic audio and video production — from concept development and scripting through filming, editing, color, and final delivery.</div>
@@ -886,9 +918,13 @@ footer {
         <span class="division-tag">Audio</span>
         <span class="division-tag">Post-Production</span>
       </div>
-    </div>
+      <div class="division-link">
+        View Division
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
     <!-- Digital -->
-    <div class="division-card">
+    <a href="digital.html" class="division-card">
       <div class="division-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div>
       <div class="division-name">Instinctive Digital</div>
       <div class="division-desc">Performance-driven digital marketing and social media management — content strategy, paid media, SEO, and community growth.</div>
@@ -897,9 +933,13 @@ footer {
         <span class="division-tag">SEO</span>
         <span class="division-tag">Paid Media</span>
       </div>
-    </div>
+      <div class="division-link">
+        View Division
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
     <!-- Development -->
-    <div class="division-card">
+    <a href="development.html" class="division-card">
       <div class="division-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
       <div class="division-name">Instinctive Development</div>
       <div class="division-desc">End-to-end app, web, and software development — custom platforms, SaaS products, mobile apps, and scalable digital infrastructure.</div>
@@ -908,9 +948,13 @@ footer {
         <span class="division-tag">Mobile</span>
         <span class="division-tag">SaaS</span>
       </div>
-    </div>
+      <div class="division-link">
+        View Division
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
     <!-- Retail -->
-    <div class="division-card">
+    <a href="retail.html" class="division-card">
       <div class="division-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
       <div class="division-name">Instinctive Retail</div>
       <div class="division-desc">Omnichannel commerce solutions — e-commerce platforms, storefront design, retail strategy, and direct-to-consumer operations.</div>
@@ -919,9 +963,13 @@ footer {
         <span class="division-tag">Storefront</span>
         <span class="division-tag">DTC</span>
       </div>
-    </div>
+      <div class="division-link">
+        View Division
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
     <!-- Publishing -->
-    <div class="division-card">
+    <a href="publishing.html" class="division-card">
       <div class="division-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
       <div class="division-name">Instinctive Publishing</div>
       <div class="division-desc">Publishing, licensing, trademarking, and entertainment business — IP protection, legal strategy, and content monetization.</div>
@@ -930,9 +978,13 @@ footer {
         <span class="division-tag">IP</span>
         <span class="division-tag">Legal</span>
       </div>
-    </div>
+      <div class="division-link">
+        View Division
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
     <!-- Technologies -->
-    <div class="division-card">
+    <a href="technologies.html" class="division-card">
       <div class="division-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div>
       <div class="division-name">Instinctive Technologies</div>
       <div class="division-desc">Enterprise IT and technology solutions — managed services, infrastructure, cloud architecture, cybersecurity, and systems integration.</div>
@@ -941,9 +993,13 @@ footer {
         <span class="division-tag">Cloud</span>
         <span class="division-tag">Security</span>
       </div>
-    </div>
+      <div class="division-link">
+        View Division
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
     <!-- Data -->
-    <div class="division-card">
+    <a href="data.html" class="division-card">
       <div class="division-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
       <div class="division-name">Instinctive Data</div>
       <div class="division-desc">AI, database engineering, and advanced analytics — machine learning pipelines, data warehousing, BI, and predictive modeling.</div>
@@ -952,9 +1008,13 @@ footer {
         <span class="division-tag">Analytics</span>
         <span class="division-tag">Data</span>
       </div>
-    </div>
+      <div class="division-link">
+        View Division
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
     <!-- Productions -->
-    <div class="division-card">
+    <a href="productions.html" class="division-card">
       <div class="division-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
       <div class="division-name">Instinctive Productions</div>
       <div class="division-desc">Live event production — AVL systems, staging, rigging, event planning, and turn-key experiential activations.</div>
@@ -963,7 +1023,11 @@ footer {
         <span class="division-tag">AVL</span>
         <span class="division-tag">Staging</span>
       </div>
-    </div>
+      <div class="division-link">
+        View Division
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
   </div>
 </section>
 
