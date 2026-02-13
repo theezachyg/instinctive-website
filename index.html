@@ -1187,7 +1187,7 @@ footer {
 <!-- ─── FOOTER ─── -->
 <footer>
   <div class="footer-left">
-    Instinctive, INC. <span>&nbsp;© 2025. All rights reserved.</span>
+    Instinctive, INC. <span>&nbsp;© <span id="currentYear"></span>. All rights reserved.</span>
   </div>
   <div class="footer-right">
     <a href="https://instinctive.xyz" target="_blank">instinctive.xyz</a>
@@ -1232,6 +1232,9 @@ const observer = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ─── DYNAMIC COPYRIGHT YEAR ───
+document.getElementById('currentYear').textContent = new Date().getFullYear();
 
 // ─── SMOOTH SCROLL ───
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {

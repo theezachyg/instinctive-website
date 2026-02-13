@@ -1262,7 +1262,7 @@ footer {
 <!-- ─── FOOTER ─── -->
 <footer>
   <div class="footer-left">
-    Instinctive, INC. <span>&nbsp;© 2025. All rights reserved.</span>
+    Instinctive, INC. <span>&nbsp;© <span id="currentYear"></span>. All rights reserved.</span>
   </div>
   <div class="footer-right">
     <a href="https://instinctive.xyz" target="_blank">instinctive.xyz</a>
@@ -1303,6 +1303,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
+
+document.getElementById('currentYear').textContent = new Date().getFullYear();
 
 // Generate waveform bars
 function generateWaveform(containerId, count) {
