@@ -425,9 +425,9 @@ footer a:hover {
 <section class="hero">
   <div class="hero-badge">
     <span class="hero-badge-dot"></span>
-    Professional Web Design & Development
+    <span id="badgeText">Professional Web Design & Development</span>
   </div>
-  <h1>
+  <h1 id="heroTitle">
     Love the website?<br>
     <span class="accent-text">We can build yours too.</span>
   </h1>
@@ -435,8 +435,8 @@ footer a:hover {
     We're Instinctive — a full-service agency specializing in custom websites, apps, branding, and digital strategy. Let's build something together.
   </p>
   <div class="cta-buttons">
-    <a href="/contact.html" class="btn-primary">Start Your Project</a>
-    <a href="/" class="btn-secondary">Explore Our Work</a>
+    <a href="/contact.html" class="btn-primary" id="ctaPrimary">Start Your Project</a>
+    <a href="/" class="btn-secondary" id="ctaSecondary">Explore Our Work</a>
   </div>
 </section>
 
@@ -544,6 +544,67 @@ document.addEventListener('mousemove', (e) => {
 
 // Dynamic copyright year
 document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+// UTM Parameter Handling
+function getUTMParams() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    source: params.get('utm_source'),
+    medium: params.get('utm_medium'),
+    campaign: params.get('utm_campaign')
+  };
+}
+
+function formatClientName(source) {
+  if (!source) return null;
+
+  // Convert underscores and hyphens to spaces, then capitalize each word
+  return source
+    .replace(/[_-]/g, ' ')
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
+function buildUTMString(utmParams) {
+  const params = [];
+  if (utmParams.source) params.push(`utm_source=${utmParams.source}`);
+  if (utmParams.medium) params.push(`utm_medium=${utmParams.medium}`);
+  if (utmParams.campaign) params.push(`utm_campaign=${utmParams.campaign}`);
+  return params.length > 0 ? '?' + params.join('&') : '';
+}
+
+// Personalize page based on UTM parameters
+const utmParams = getUTMParams();
+
+if (utmParams.source) {
+  const clientName = formatClientName(utmParams.source);
+
+  // Update badge text
+  const badgeText = document.getElementById('badgeText');
+  if (badgeText) {
+    badgeText.textContent = `Built for ${clientName}`;
+  }
+
+  // Update hero title
+  const heroTitle = document.getElementById('heroTitle');
+  if (heroTitle) {
+    heroTitle.innerHTML = `Love the ${clientName} website?<br><span class="accent-text">We can build yours too.</span>`;
+  }
+
+  // Add UTM parameters to CTA links
+  const utmString = buildUTMString(utmParams);
+
+  const ctaPrimary = document.getElementById('ctaPrimary');
+  if (ctaPrimary && utmString) {
+    ctaPrimary.href = '/contact.html' + utmString;
+  }
+
+  const ctaSecondary = document.getElementById('ctaSecondary');
+  if (ctaSecondary && utmString) {
+    ctaSecondary.href = '/' + utmString;
+  }
+}
 </script>
 </body>
 </html>
