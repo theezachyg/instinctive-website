@@ -181,6 +181,20 @@ nav.scrolled { border-bottom-color: var(--border); }
   line-height: 1.7;
 }
 
+#typingText {
+  color: var(--accent);
+}
+
+.typing-cursor {
+  color: var(--accent);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
 /* ─── CONTACT SECTION ─── */
 .contact-section {
   padding: 4rem 3rem 8rem;
@@ -501,7 +515,7 @@ footer {
 
 <!-- ─── HERO ─── -->
 <section class="contact-hero">
-  <h1>Let's Build Something.</h1>
+  <h1>Let's <span id="typingText"></span><span class="typing-cursor">|</span></h1>
   <p>Whether you need a single service or a full-scale integrated campaign — we're ready. Drop us a line and we'll get back to you within 24 hours.</p>
 </section>
 
@@ -665,6 +679,57 @@ navLinks.querySelectorAll('a').forEach(link => {
 
 // Dynamic copyright year
 document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+// Typing effect
+const typingText = document.getElementById('typingText');
+const words = [
+  'Build Something.',
+  'Talk Strategy.',
+  'Create Together.',
+  'Make Magic.',
+  'Start a Project.',
+  'Work Together.',
+  'Collaborate.',
+  'Innovate.',
+  'Transform.',
+  'Launch.',
+  'Grow.',
+  'Scale.'
+];
+
+let wordIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+let typingSpeed = 150;
+
+function type() {
+  const currentWord = words[wordIndex];
+
+  if (isDeleting) {
+    typingText.textContent = currentWord.substring(0, charIndex - 1);
+    charIndex--;
+    typingSpeed = 50;
+  } else {
+    typingText.textContent = currentWord.substring(0, charIndex + 1);
+    charIndex++;
+    typingSpeed = 150;
+  }
+
+  if (!isDeleting && charIndex === currentWord.length) {
+    // Pause at end of word
+    typingSpeed = 2000;
+    isDeleting = true;
+  } else if (isDeleting && charIndex === 0) {
+    isDeleting = false;
+    wordIndex = (wordIndex + 1) % words.length;
+    typingSpeed = 500;
+  }
+
+  setTimeout(type, typingSpeed);
+}
+
+// Start typing effect
+setTimeout(type, 1000);
 
 // Form submission
 const contactForm = document.getElementById('contactForm');
