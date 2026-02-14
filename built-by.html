@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website Built by Instinctive — Professional Web Design & Development</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #080808;
+  --surface: #111111;
+  --surface-2: #1a1a1a;
+  --border: #222222;
+  --border-hover: #333333;
+  --text: #f0f0f0;
+  --text-muted: #888888;
+  --text-dim: #555555;
+  --accent: #c8ff00;
+  --accent-dim: rgba(200, 255, 0, 0.08);
+  --accent-glow: rgba(200, 255, 0, 0.15);
+  --white: #ffffff;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent); color: var(--bg); }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+.cursor-glow {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle, rgba(200, 255, 0, 0.03) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease-out;
+}
+
+.noise {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ─── HEADER ─── */
+.header {
+  padding: 2rem 3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.logo .dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 6rem 3rem;
+  text-align: center;
+  position: relative;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1.2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+}
+
+.hero-badge-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--white);
+  max-width: 900px;
+  margin-bottom: 1.5rem;
+}
+
+.hero h1 .accent-text {
+  color: var(--accent);
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  line-height: 1.7;
+  margin-bottom: 3rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  padding: 1rem 2.5rem;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(200, 255, 0, 0.25);
+}
+
+.btn-secondary {
+  padding: 1rem 2.5rem;
+  background: transparent;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.3s ease, background 0.3s ease;
+  display: inline-block;
+}
+
+.btn-secondary:hover {
+  border-color: var(--text-muted);
+  background: rgba(255,255,255,0.03);
+}
+
+/* ─── SERVICES ─── */
+.services {
+  padding: 6rem 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.services-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.services-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.services-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.service-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.service-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+
+.service-card h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.8rem;
+}
+
+.service-card p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ─── PROCESS ─── */
+.process {
+  padding: 6rem 3rem;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.process-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.process-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+}
+
+.process-desc {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 3rem;
+}
+
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.process-step {
+  text-align: center;
+}
+
+.step-number {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.process-step h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+
+.process-step p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ─── CTA SECTION ─── */
+.cta-section {
+  padding: 8rem 3rem;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+}
+
+.cta-section p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 3rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+footer a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: var(--accent);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .hero {
+    padding: 5rem 1.5rem;
+  }
+
+  .services {
+    padding: 4rem 1.5rem;
+  }
+
+  .process {
+    padding: 4rem 1.5rem;
+  }
+
+  .cta-section {
+    padding: 6rem 1.5rem;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .process-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ─── HEADER ─── -->
+<header class="header">
+  <a href="/" class="logo">
+    <span class="dot"></span>
+    INSTINCTIVE
+  </a>
+</header>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="hero-badge-dot"></span>
+    Professional Web Design & Development
+  </div>
+  <h1>
+    Love the website?<br>
+    <span class="accent-text">We can build yours too.</span>
+  </h1>
+  <p class="hero-subtitle">
+    We're Instinctive — a full-service agency specializing in custom websites, apps, branding, and digital strategy. Let's build something together.
+  </p>
+  <div class="cta-buttons">
+    <a href="/contact.html" class="btn-primary">Start Your Project</a>
+    <a href="/" class="btn-secondary">Explore Our Work</a>
+  </div>
+</section>
+
+<!-- ─── SERVICES ─── -->
+<section class="services">
+  <div class="services-header">
+    <div class="services-label">What We Do</div>
+    <h2 class="services-title">From idea to launch — we handle it all.</h2>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <h3>Web Design & Development</h3>
+      <p>Custom websites built with your brand, your goals, and your audience in mind. Fast, beautiful, and built to convert.</p>
+    </div>
+
+    <div class="service-card">
+      <h3>E-Commerce Solutions</h3>
+      <p>Online stores that sell. From Shopify to custom platforms, we build commerce experiences that drive revenue.</p>
+    </div>
+
+    <div class="service-card">
+      <h3>Mobile Apps</h3>
+      <p>iOS, Android, and web apps designed for real users. We handle the full stack — design, development, and launch.</p>
+    </div>
+
+    <div class="service-card">
+      <h3>Branding & Strategy</h3>
+      <p>Visual identity, messaging, and positioning that makes your brand impossible to ignore.</p>
+    </div>
+
+    <div class="service-card">
+      <h3>Digital Marketing</h3>
+      <p>SEO, social media, paid ads, and content strategy — all backed by data and built to perform.</p>
+    </div>
+
+    <div class="service-card">
+      <h3>Video & Content</h3>
+      <p>Professional video production, photography, and content creation to tell your story.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROCESS ─── -->
+<section class="process">
+  <div class="process-content">
+    <h2 class="process-title">Simple process. Powerful results.</h2>
+    <p class="process-desc">
+      We don't overcomplicate things. Tell us what you need, and we'll build it — with transparency, collaboration, and craftsmanship at every step.
+    </p>
+
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-number">01</div>
+        <h4>Discovery</h4>
+        <p>We learn your business, goals, and audience.</p>
+      </div>
+
+      <div class="process-step">
+        <div class="step-number">02</div>
+        <h4>Design</h4>
+        <p>We create a beautiful, functional experience.</p>
+      </div>
+
+      <div class="process-step">
+        <div class="step-number">03</div>
+        <h4>Develop</h4>
+        <p>We build it — fast, clean, and scalable.</p>
+      </div>
+
+      <div class="process-step">
+        <div class="step-number">04</div>
+        <h4>Launch</h4>
+        <p>We deploy, optimize, and support you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section class="cta-section">
+  <h2>Ready to build something great?</h2>
+  <p>Drop us a line and we'll get back to you within 24 hours. No pressure, no hard sell — just a conversation about what's possible.</p>
+  <div class="cta-buttons">
+    <a href="/contact.html" class="btn-primary">Get in Touch</a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <p>
+    Instinctive, INC. &nbsp;© <span id="currentYear"></span>. All rights reserved. &nbsp;|&nbsp;
+    <a href="/">Home</a> &nbsp;|&nbsp;
+    <a href="/contact.html">Contact</a>
+  </p>
+</footer>
+
+<script>
+// Cursor glow
+const glow = document.getElementById('cursorGlow');
+document.addEventListener('mousemove', (e) => {
+  glow.style.left = e.clientX + 'px';
+  glow.style.top = e.clientY + 'px';
+});
+
+// Dynamic copyright year
+document.getElementById('currentYear').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
