@@ -189,23 +189,25 @@ body {
 .btn-secondary {
   padding: 1rem 2.5rem;
   background: transparent;
-  color: var(--text);
+  color: var(--secondary);
   font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  border: 1px solid var(--border);
+  border: 1px solid var(--secondary);
   border-radius: 100px;
   cursor: pointer;
   text-decoration: none;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
   display: inline-block;
 }
 
 .btn-secondary:hover {
-  border-color: var(--text-muted);
-  background: rgba(255,255,255,0.03);
+  background: var(--secondary-dim);
+  border-color: var(--secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--secondary-glow);
 }
 
 /* ─── SERVICES ─── */
@@ -376,7 +378,7 @@ footer a {
 }
 
 footer a:hover {
-  color: var(--accent);
+  color: var(--secondary);
 }
 
 /* ─── RESPONSIVE ─── */

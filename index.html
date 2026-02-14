@@ -127,7 +127,7 @@ nav.scrolled { border-bottom-color: var(--border); }
   text-transform: uppercase;
   transition: color 0.25s ease;
 }
-.nav-links a:hover { color: var(--white); }
+.nav-links a:hover { color: var(--secondary); }
 
 .nav-cta {
   padding: 0.55rem 1.4rem;
@@ -260,19 +260,24 @@ nav.scrolled { border-bottom-color: var(--border); }
 .btn-secondary {
   padding: 0.85rem 2.2rem;
   background: transparent;
-  color: var(--text);
+  color: var(--secondary);
   font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 0.85rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  border: 1px solid var(--border);
+  border: 1px solid var(--secondary);
   border-radius: 100px;
   cursor: pointer;
   text-decoration: none;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
-.btn-secondary:hover { border-color: var(--text-muted); background: rgba(255,255,255,0.03); }
+.btn-secondary:hover {
+  background: var(--secondary-dim);
+  border-color: var(--secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--secondary-glow);
+}
 
 .hero-stats {
   display: flex;
@@ -726,7 +731,7 @@ section { padding: 7rem 3rem; position: relative; }
   text-decoration: none;
   transition: color 0.3s ease;
 }
-.cta-email a:hover { color: var(--accent); }
+.cta-email a:hover { color: var(--secondary); }
 
 /* ─── FOOTER ─── */
 footer {
@@ -758,7 +763,7 @@ footer {
   font-weight: 500;
   transition: color 0.3s ease;
 }
-.footer-right a:hover { color: var(--accent); }
+.footer-right a:hover { color: var(--secondary); }
 
 /* ─── SCROLL REVEAL ─── */
 .reveal {
